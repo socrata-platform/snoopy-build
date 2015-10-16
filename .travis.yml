@@ -12,7 +12,7 @@ before_script:
   - git submodule update
   - ln -nfs contrib/debian .
   - sed -i 's/rm /rm -f /' contrib/debian/rules
-  - sed -i '/^Maintainer: /s/.*/Maintainer: Jonathan Hartman <j@hartman.io>/' contrib/debian/control
+  - "sed -i '/^Maintainer: /s/.*/Maintainer: Jonathan Hartman <j@hartman.io>/' contrib/debian/control"
 
 script:
   - sudo debuild --no-tgz-check -I.git -i'\.git/' -us -uc -b
