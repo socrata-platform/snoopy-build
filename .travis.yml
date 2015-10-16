@@ -16,8 +16,7 @@ before_script:
   - "sed -i '/^Maintainer: /s/.*/Maintainer: Jonathan Hartman <j@hartman.io>/' contrib/debian/control"
 
 script:
-  - mkdir build/m4
-  - sudo debuild --no-tgz-check -I.git -i'\.git/' -us -uc -b
+  - sudo debuild --no-tgz-check -I.git -i'\.git/' -us -uc -b -v
 
 after_script:
   - ls -la ~/libsnoopy*
