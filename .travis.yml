@@ -1,6 +1,7 @@
 language: ruby
 
 install:
+  - sudo apt-get update
   - sudo apt-get install git ruby devscripts debhelper autoconf dh-autoreconf socat
   - gem install package_cloud
 
