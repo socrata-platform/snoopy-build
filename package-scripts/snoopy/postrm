@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Perform necessary snoopy removal steps
+# after package is uninstalled.
+#
+
+echo "snoopy has been uninstalled!"
+
+exit 0
