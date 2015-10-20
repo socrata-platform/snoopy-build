@@ -47,7 +47,9 @@ describe 'snoopy-omnibus::build' do
     it 'executes the Omnibus build' do
       expect(chef_run).to execute_omnibus_build('snoopy').with(
         project_dir: project_dir,
-        install_dir: install_dir
+        install_dir: install_dir,
+        config_overrides: { use_git_caching: false,
+                            append_timestamp: false }
       )
     end
 

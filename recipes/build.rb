@@ -52,7 +52,8 @@ omnibus_build 'snoopy' do
   install_dir install_dir
   # TODO: The omnibus cookbook generates an invalid build command if no
   # overrides are passed in.
-  config_overrides use_git_caching: false
+  config_overrides(use_git_caching: false,
+                   append_timestamp: false)
 end
 
 directory install_dir do
