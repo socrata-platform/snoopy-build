@@ -33,11 +33,11 @@ build do
 
   env['CFLAGS'] << ' -DNO_VIZ' if solaris?
 
+  command "rm -rf #{install_dir}/embedded/bin #{install_dir}/bin"
   command './bootstrap.sh'
   command [
     './configure',
     "--prefix=#{install_dir}/embedded",
-    "--bindir=#{install_dir}/bin",
     "--sbindir=#{install_dir}/sbin",
     "--sysconfdir=#{install_dir}/etc"
   ], env: env

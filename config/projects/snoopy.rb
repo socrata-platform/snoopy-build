@@ -31,10 +31,6 @@ install_dir "#{default_root}/#{name}"
 build_version ENV['BUILD_VERSION']
 build_iteration ENV['BUILD_ITERATION']
 
-# build_version Net::HTTP.get(URI('http://source.a2o.si/download/snoopy/' \
-#                                 'snoopy-latest-version.txt')).strip
-# build_iteration 1
-
 # Creates required build directories
 dependency 'preparation'
 
