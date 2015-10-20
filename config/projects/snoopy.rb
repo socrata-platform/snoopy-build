@@ -18,14 +18,10 @@
 # limitations under the License.
 #
 
-require 'net/http'
-
 name 'snoopy'
-maintainer 'Jonathan Hartman <j@hartman.io'
+maintainer 'Jonathan Hartman <j@hartman.io>'
 homepage 'https://github.com/RoboticCheese/snoopy-omnibus'
 
-# Defaults to C:/snoopy on Windows
-# and /opt/snoopy on all other platforms
 install_dir "#{default_root}/#{name}"
 
 build_version ENV['BUILD_VERSION']
@@ -34,7 +30,7 @@ build_iteration ENV['BUILD_ITERATION']
 # Creates required build directories
 dependency 'preparation'
 
-# snoopy dependencies/components
+# Snoopy dependencies/components
 dependency 'snoopy'
 
 # Version manifest file
