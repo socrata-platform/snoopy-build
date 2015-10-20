@@ -12,6 +12,6 @@ function error_exit
   exit 1
 }
 
-rm -f /etc/snoopy.ini /sbin/snoopy-enable /sbin/snoopy-disable
+rm -f /etc/snoopy.ini /sbin/snoopy-enable /sbin/snoopy-disable /lib/libsnoopy.so
 
 exit 0

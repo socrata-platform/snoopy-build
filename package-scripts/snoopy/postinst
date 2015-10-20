@@ -14,6 +14,7 @@ function error_exit
 
 
 ln -sf $INSTALL_DIR/etc/snoopy.ini /etc || error_exit "Cannot link snoopy.ini to /etc/"
+ln -sf $INSTALL_DIR/lib/libsnoopy.so /lib || error_exit "Cannot link libsnoopy.so to /lib/"
 for SBIN in snoopy-enable snoopy-disable; do
   ln -sf $INSTALL_DIR/sbin/$SBIN /sbin || error_exit "Cannot link $SBIN to /sbin/"
 done
