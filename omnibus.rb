@@ -49,5 +49,9 @@
 
 # Windows architecture defaults
 # ------------------------------
-windows_arch   %w{x86 x64}.include?((ENV['OMNIBUS_WINDOWS_ARCH'] || '').downcase) ?
-                 ENV['OMNIBUS_WINDOWS_ARCH'].downcase.to_sym : :x86
+warch = if %w(x86 x64).include?((ENV['OMNIBUS_WINDOWS_ARCH'] || '').downcase)
+          ENV['OMNIBUS_WINDOWS_ARCH'].downcase.to_sym
+        else
+          :x86
+        end
+windows_arch(warch)

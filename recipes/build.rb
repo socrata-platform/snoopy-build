@@ -24,17 +24,38 @@ include_recipe 'omnibus'
 # A few extra build tools not included with build-essential are needed
 %w(debhelper dh-autoreconf socat).each { |p| package p }
 
-execute 'bundle install' do
-  user node['omnibus']['build_user']
-  cwd node['omnibus']['build_dir']
+build_user = node['omnibus']['build_user']
+build_group = node['omnibus']['build_user_group']
+staging_dir = node['omnibus']['staging_dir']
+project_dir = node['omnibus']['project_dir']
+install_dir = node['omnibus']['install_dir']
+
+ENV['BUILD_VERSION'] = node['omnibus']['build_version']
+ENV['BUILD_ITERATION'] = node['omnibus']['build_iteration'].to_s
+
+# Sync the project's staging dir to the build dir, ensuring the copy is owned
+# by the build user (because some syncing methods result in a directory
+# permanently owned by the vagrant user).
+execute 'fix project dir ownership' do
+  command "chown -R #{build_user}:#{build_group} #{project_dir}"
+  action :nothing
 end
 
-execute 'bundle exec omnibus build snoopy' do
-  user node['omnibus']['build_user']
-  cwd node['omnibus']['build_dir']
+execute 'copy project dir' do
+  command "cp -a #{staging_dir} #{project_dir}"
+  creates project_dir
+  notifies :run, 'execute[fix project dir ownership]', :immediately
 end
 
-directory node['omnibus']['install_dir'] do
+omnibus_build 'snoopy' do
+  project_dir project_dir
+  install_dir install_dir
+  # TODO: The omnibus cookbook generates an invalid build command if no
+  # overrides are passed in.
+  config_overrides use_git_caching: false
+end
+
+directory install_dir do
   recursive true
   action :delete
 end

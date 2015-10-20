@@ -1,10 +1,37 @@
+# Encoding: UTF-8
+
 source 'https://rubygems.org'
 
-gem 'omnibus'
-gem 'omnibus-software', github: 'opscode/omnibus-software'
-
 group :development do
-  gem 'berkshelf'
+  gem 'yard-chef'
+  gem 'guard'
+  gem 'guard-foodcritic'
+  gem 'guard-rspec'
+  gem 'guard-kitchen'
+end
+
+group :test do
+  gem 'rake'
+  gem 'rubocop'
+  gem 'foodcritic'
+  gem 'rspec', '>= 3'
+  gem 'chefspec', '>= 4'
+  gem 'simplecov'
+  gem 'simplecov-console'
+  gem 'coveralls'
+  gem 'fauxhai'
+end
+
+group :integration do
+  gem 'serverspec', '>= 2'
+  gem 'cucumber'
+end
+
+group :build do
+  gem 'omnibus'
+  gem 'omnibus-software', github: 'opscode/omnibus-software'
+  gem 'chef', '>= 12'
+  gem 'berkshelf', '>= 4'
   gem 'test-kitchen'
   gem 'kitchen-vagrant'
 end

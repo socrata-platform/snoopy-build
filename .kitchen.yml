@@ -4,7 +4,7 @@ driver:
   customize:
     memory: 2048
   synced_folders:
-    - ['.', '/home/omnibus/snoopy']
+    - ['.', '/snoopy']
 
 provisioner:
   name: chef_zero
@@ -30,7 +30,18 @@ suites:
     run_list: snoopy-omnibus::default
     attributes:
       omnibus:
+        build_version: <%=
+          require 'net/http'
+          Net::HTTP.get(URI('http://source.a2o.si/download/snoopy/' \
+                            'snoopy-latest-version.txt')).strip
+        %>
+        build_iteration: 1
         build_user: omnibus
         build_user_group: omnibus
+        staging_dir: /snoopy
+        project_dir: /home/omnibus/snoopy
         # build_user_password: omnibus
         install_dir:         /opt/snoopy
+      package_cloud:
+        user: roboticcheese
+        repo: snoopy

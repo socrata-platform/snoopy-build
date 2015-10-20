@@ -18,19 +18,20 @@
 require 'net/http'
 
 name 'snoopy'
-default_version Net::HTTP.get(URI(
-  'http://source.a2o.si/download/snoopy/snoopy-latest-version.txt'
-)).strip
+
+default_version Net::HTTP.get(URI('http://source.a2o.si/download/snoopy/' \
+                                  'snoopy-latest-version.txt')).strip
 
 source url: "http://source.a2o.si/download/snoopy/snoopy-#{version}.tar.gz",
-       md5: Net::HTTP.get(URI(
-         "http://source.a2o.si/download/snoopy/snoopy-#{version}.tar.gz.md5"
-       )).split[0]
+       md5: Net::HTTP.get(URI('http://source.a2o.si/download/snoopy/' \
+                              "snoopy-#{version}.tar.gz.md5")).split[0]
+
+relative_path "snoopy-#{version}"
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  env["CFLAGS"] << " -DNO_VIZ" if solaris?
+  env['CFLAGS'] << ' -DNO_VIZ' if solaris?
 
   command './bootstrap.sh'
   command [

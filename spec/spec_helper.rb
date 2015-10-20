@@ -22,6 +22,21 @@ RSpec.configure do |c|
                        File.expand_path('../support/cookbooks', __FILE__)]
   end
 
+  c.before(:each) do
+    # Test each recipe in isolation, regardless of includes
+    @included_recipes = []
+    allow_any_instance_of(Chef::RunContext).to receive(:loaded_recipe?)
+      .and_return(false)
+    allow_any_instance_of(Chef::Recipe).to receive(:include_recipe) do |_, i|
+      allow_any_instance_of(Chef::RunContext).to receive(:loaded_recipe?)
+        .with(i)
+        .and_return(true)
+      @included_recipes << i
+    end
+    allow_any_instance_of(Chef::RunContext).to receive(:loaded_recipes)
+      .and_return(@included_recipes)
+  end
+
   c.after(:suite) { FileUtils.rm_r(COOKBOOK_PATH) }
 end
 

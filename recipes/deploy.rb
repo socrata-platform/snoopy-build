@@ -18,4 +18,12 @@
 # limitations under the License.
 #
 
+ruby_gem 'package_cloud' do
+  ruby node['omnibus']['ruby_version']
+end
+
 # TODO: Push artifacts to PackageCloud.io
+# cmd =  "chruby-exec #{node['omnibus']['ruby_version']} -- " \
+#        "package_cloud push #{node['package_cloud']['user']}/" \
+#        "#{node['package_cloud']['repo']}/#{node['platform']}/" \
+#        "#{version} #{path_to_package}"
