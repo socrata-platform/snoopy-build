@@ -1,16 +1,22 @@
 #!/bin/bash
 #
-# Perform necessary snoopy setup steps
-# after package is installed.
+# Perform necessary snoopy setup steps after package is installed.
 #
 
 PROGNAME=$(basename $0)
+INSTALL_DIR=/opt/snoopy
 
 function error_exit
 {
   echo "${PROGNAME}: ${1:-"Unknown Error"}" 1>&2
   exit 1
 }
+
+
+ln -sf $INSTALL_DIR/etc/snoopy.ini /etc || error_exit "Cannot link snoopy.ini to /etc/"
+for SBIN in snoopy-enable snoopy-disable; do
+  ln -sf $INSTALL_DIR/sbin/$SBIN /sbin || error_exit "Cannot link $SBIN to /sbin/"
+done
 
 echo "Thank you for installing snoopy!"
 
