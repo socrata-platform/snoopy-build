@@ -36,7 +36,7 @@ install_dir = node['omnibus']['install_dir']
 
 ENV['BUILD_VERSION'] = build_version = node['omnibus']['build_version']
 ENV['BUILD_ITERATION'] = build_iteration = node['omnibus']['build_iteration']
-                                             .to_s
+                                           .to_s
 
 # Sync the project's staging dir to the build dir, ensuring the copy is owned
 # by the build user (because some syncing methods result in a directory
@@ -70,4 +70,16 @@ package ::File.join(project_dir,
                     'pkg',
                     "snoopy_#{build_version}-#{build_iteration}_amd64.deb") do
   provider Chef::Provider::Package::Dpkg
+end
+
+artifact_dir = ::File.join(staging_dir,
+                           'pkg',
+                           node['platform'],
+                           node['lsb']['codename'])
+directory artifact_dir do
+  recursive true
+end
+
+execute 'copy package artifacts' do
+  command "cp -rp #{project_dir}/pkg/* #{artifact_dir}/"
 end

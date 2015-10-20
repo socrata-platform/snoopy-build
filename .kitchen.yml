@@ -40,8 +40,7 @@ suites:
         build_user_group: omnibus
         staging_dir: /snoopy
         project_dir: /home/omnibus/snoopy
-        # build_user_password: omnibus
-        install_dir:         /opt/snoopy
+        install_dir: /opt/snoopy
       package_cloud:
         user: roboticcheese
         repo: snoopy
