@@ -1,6 +1,10 @@
 Snoopy Omnibus Project
 ======================
-This project creates full-stack platform-specific packages for Snoopy Logger.
+[![Build Status](https://img.shields.io/travis/RoboticCheese/snoopy-omnibus.svg)][travis]
+
+[travis]: https://travis-ci.org/RoboticCheese/snoopy-omnibus
+
+This project creates full-stack, platform-specific packages for Snoopy Logger.
 
 Installation
 ------------
