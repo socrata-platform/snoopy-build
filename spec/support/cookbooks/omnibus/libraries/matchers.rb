@@ -1,15 +1,13 @@
 if defined?(ChefSpec)
-  ChefSpec.define_matcher :ruby_gem
-  def install_ruby_gem(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:ruby_gem,
-                                            :install,
-                                            resource_name)
-  end
-
-  ChefSpec.define_matcher :omnibus_build
-  def execute_omnibus_build(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:omnibus_build,
-                                            :execute,
-                                            resource_name)
+  {
+    ruby_gem: %i(install),
+    omnibus_build: %i(execute)
+  }.each do |matcher, actions|
+    ChefSpec.define_matcher(matcher)
+    actions.each do |action|
+      define_method("#{action}_#{matcher}") do |name|
+        ChefSpec::Matchers::ResourceMatcher.new(matcher, action, name)
+      end
+    end
   end
 end
