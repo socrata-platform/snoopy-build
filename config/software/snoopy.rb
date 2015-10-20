@@ -33,8 +33,9 @@ build do
 
   env['CFLAGS'] << ' -DNO_VIZ' if solaris?
 
-  command "rm -rf #{install_dir}/embedded/bin #{install_dir}/bin " \
-          "#{install_dir}/embedded/lib"
+  # The only files the package builds are the config, config scripts, and main
+  # libs, all of which belong the level above embedded/.
+  command "rm -rf #{install_dir}/embedded #{install_dir}/bin"
   command './bootstrap.sh'
   command [
     './configure',

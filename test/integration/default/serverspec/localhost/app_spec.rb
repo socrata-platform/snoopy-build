@@ -8,4 +8,16 @@ describe 'snoopy::app' do
       expect(subject).to be_installed
     end
   end
+
+  describe file('/etc/snoopy.ini') do
+    it 'links to the Omnibussed file' do
+      expect(subject).to be_linked_to('/opt/snoopy/etc/snoopy.ini')
+    end
+  end
+
+  describe file('/lib/libsnoopy.so') do
+    it 'links to the Omnibussed file' do
+      expect(subject).to be_linked_to('/opt/snoopy/lib/libsnoopy.so')
+    end
+  end
 end

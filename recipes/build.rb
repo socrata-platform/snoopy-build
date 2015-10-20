@@ -18,6 +18,10 @@
 # limitations under the License.
 #
 
+package 'snoopy' do
+  action :remove
+end
+
 include_recipe 'apt' if node['platform_family'] == 'debian'
 include_recipe 'omnibus'
 
@@ -30,8 +34,9 @@ staging_dir = node['omnibus']['staging_dir']
 project_dir = node['omnibus']['project_dir']
 install_dir = node['omnibus']['install_dir']
 
-ENV['BUILD_VERSION'] = node['omnibus']['build_version']
-ENV['BUILD_ITERATION'] = node['omnibus']['build_iteration'].to_s
+ENV['BUILD_VERSION'] = build_version = node['omnibus']['build_version']
+ENV['BUILD_ITERATION'] = build_iteration = node['omnibus']['build_iteration']
+                                             .to_s
 
 # Sync the project's staging dir to the build dir, ensuring the copy is owned
 # by the build user (because some syncing methods result in a directory
@@ -61,4 +66,8 @@ directory install_dir do
   action :delete
 end
 
-# TODO: Install the package artifact
+package ::File.join(project_dir,
+                    'pkg',
+                    "snoopy_#{build_version}-#{build_iteration}_amd64.deb") do
+  provider Chef::Provider::Package::Dpkg
+end
