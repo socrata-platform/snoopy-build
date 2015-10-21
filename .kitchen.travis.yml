@@ -5,7 +5,7 @@ suites:
   - name: default
     run_list: 
       - snoopy-build::default
-      <%= '- snoopy-build::deploy' if ENV['PULL_REQUEST'] == 'false' %>
+      <%= '- snoopy-build::deploy' if ENV['TRAVIS_PULL_REQUEST'] == 'false' %>
     attributes:
       snoopy_build:
         package_cloud_user: socrata-platform
