@@ -20,11 +20,4 @@ describe 'snoopy::app' do
       expect(subject).to be_file
     end
   end
-
-  describe file('/var/log/auth.log') do
-    it 'is logging system commands' do
-      command('ls')
-      expect(subject.content).to match(%r{snoopy.*filename:/bin/ls})
-    end
-  end
 end
