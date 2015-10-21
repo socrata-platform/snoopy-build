@@ -25,10 +25,11 @@ repo = node['snoopy_build']['package_cloud_repo']
 version = node['snoopy_build']['build_version']
 revision = node['snoopy_build']['build_revision']
 
+pc_token = node['snoopy_build']['package_cloud_token']
 pc_path = "#{user}/#{repo}/#{node['platform']}/#{node['lsb']['codename']}"
 pkg_path = File.join(File.expand_path('~/fpm-recipes/snoopy/pkg/'),
                      "snoopy_#{version}-#{revision}_amd64.deb")
 
 execute "package_cloud push #{pc_path} #{pkg_path}" do
-  environment 'PACKAGECLOUD_TOKEN' => ENV['PACKAGECLOUD_TOKEN']
+  environment 'PACKAGECLOUD_TOKEN' => pc_token
 end

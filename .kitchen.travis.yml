@@ -8,5 +8,6 @@ suites:
       <%= '- snoopy-build::deploy' if ENV['TRAVIS_PULL_REQUEST'] == 'false' %>
     attributes:
       snoopy_build:
+        package_cloud_token: <%= ENV['PACKAGECLOUD_TOKEN'] %>
         package_cloud_user: socrata-platform
         package_cloud_repo: snoopy
