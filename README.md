@@ -1,8 +1,10 @@
 Snoopy Build Project
 ====================
 [![Build Status](https://img.shields.io/travis/socrata-platform/snoopy-build.svg)][travis]
+[![Coverage Status](https://img.shields.io/coveralls/socrata-platform/snoopy-build.svg)][coveralls]
 
 [travis]: https://travis-ci.org/socrata-platform/snoopy-build
+[coveralls]: https://coveralls.io/r/socrata-platform/snoopy-build
 
 A project for building Snoopy Logger packages using FPM-Cookery.
 
