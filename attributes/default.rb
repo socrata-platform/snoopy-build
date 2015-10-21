@@ -1,7 +1,7 @@
 # Encoding: UTF-8
 #
-# Cookbook Name:: snoopy-omnibus
-# Recipe:: default
+# Cookbook Name:: snoopy-build
+# Attributes:: default
 #
 # Copyright 2015 Socrata, Inc.
 #
@@ -18,23 +18,9 @@
 # limitations under the License.
 #
 
-name 'snoopy'
-maintainer 'Jonathan Hartman <j@hartman.io>'
-homepage 'https://github.com/RoboticCheese/snoopy-omnibus'
+require 'net/http'
 
-install_dir "#{default_root}/#{name}"
-
-build_version ENV['BUILD_VERSION']
-build_iteration ENV['BUILD_ITERATION']
-
-# Creates required build directories
-dependency 'preparation'
-
-# Snoopy dependencies/components
-dependency 'snoopy'
-
-# Version manifest file
-dependency 'version-manifest'
-
-exclude '**/.git'
-exclude '**/bundler/git'
+default['snoopy_build']['build_version'] = Net::HTTP.get(
+  URI('http://source.a2o.si/download/snoopy/snoopy-latest-version.txt')
+).strip
+default['snoopy_build']['build_revision'] = 1

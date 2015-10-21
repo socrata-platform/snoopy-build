@@ -1,6 +1,6 @@
 # Encoding: UTF-8
 #
-# Cookbook Name:: snoopy-omnibus
+# Cookbook Name:: snoopy-build
 # Recipe:: deploy
 #
 # Copyright 2015 Socrata, Inc.
@@ -18,12 +18,17 @@
 # limitations under the License.
 #
 
-ruby_gem 'package_cloud' do
-  ruby node['omnibus']['ruby_version']
-end
+gem_package 'package_cloud'
 
-# TODO: Push artifacts to PackageCloud.io
-# cmd =  "chruby-exec #{node['omnibus']['ruby_version']} -- " \
-#        "package_cloud push #{node['package_cloud']['user']}/" \
-#        "#{node['package_cloud']['repo']}/#{node['platform']}/" \
-#        "#{version} #{path_to_package}"
+user = node['snoopy_build']['package_cloud_user']
+repo = node['snoopy_build']['package_cloud_repo']
+version = node['snoopy_build']['build_version']
+revision = node['snoopy_build']['build_revision']
+
+pc_path = "#{user}/#{repo}/#{node['platform']}/#{node['lsb']['codename']}"
+pkg_path = File.join(File.expand_path('~/fpm-recipes/snoopy/pkg/'),
+                     "snoopy_#{version}-#{revision}_amd64.deb")
+
+execute "package_cloud push #{pc_path} #{pkg_path}" do
+  environment 'PACKAGECLOUD_TOKEN' => ENV['PACKAGECLOUD_TOKEN']
+end

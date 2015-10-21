@@ -2,22 +2,13 @@
 
 require_relative '../spec_helper'
 
-describe 'snoopy-omnibus::build' do
-  let(:platform) { nil }
-  let(:build_user) { 'omnibus' }
-  let(:build_group) { 'omnibus' }
-  let(:staging_dir) { '/snoopy' }
-  let(:project_dir) { '/home/omnibus/snoopy' }
-  let(:install_dir) { '/opt/snoopy' }
+describe 'snoopy-build::build' do
   let(:build_version) { '2.4.4' }
-  let(:build_iteration) { 1 }
+  let(:build_revision) { 1 }
   let(:runner) do
     ChefSpec::SoloRunner.new(platform) do |node|
-      %w(
-        build_user build_group staging_dir project_dir install_dir
-        build_version build_iteration
-      ).each do |a|
-        node.set['omnibus'][a] = send(a)
+      %w(build_version build_revision).each do |a|
+        node.set['snoopy_build'][a] = send(a)
       end
     end
   end
@@ -28,47 +19,33 @@ describe 'snoopy-omnibus::build' do
       expect(chef_run).to remove_package('snoopy')
     end
 
-    it 'includes the omnibus cookbook' do
-      expect(chef_run).to include_recipe('omnibus')
+    it 'cleans up any current package directory' do
+      d = File.expand_path('~/fpm-recipes/snoopy/pkg')
+      expect(chef_run).to delete_directory(d).with(recursive: true)
     end
 
-    %w(debhelper dh-autoreconf socat).each do |p|
-      it "installs the '#{p}' package" do
-        expect(chef_run).to install_package(p)
-      end
+    it 'includes build-essential' do
+      expect(chef_run).to include_recipe('build-essential')
     end
 
-    it 'declares an execute resource to fix project dir ownership' do
-      expect(chef_run.execute('fix project dir ownership')).to do_nothing
+    it 'includes ruby' do
+      expect(chef_run).to include_recipe('ruby')
     end
 
-    it 'copies the project dir into place' do
-      expect(chef_run).to run_execute('copy project dir')
-        .with(command: "cp -a #{staging_dir} #{project_dir}",
-              creates: project_dir)
-      expect(chef_run.execute('copy project dir')).to notify(
-        'execute[fix project dir ownership]'
-      ).to(:run)
+    it 'installs fpm-cookery' do
+      expect(chef_run).to install_gem_package('fpm-cookery')
     end
 
-    it 'executes the Omnibus build' do
-      expect(chef_run).to execute_omnibus_build('snoopy').with(
-        project_dir: project_dir,
-        install_dir: install_dir,
-        config_overrides: { use_git_caching: false,
-                            append_timestamp: false }
-      )
+    it 'syncs the fpm-recipes directory' do
+      d = File.expand_path('~/fpm-recipes')
+      expect(chef_run).to create_remote_directory(d)
     end
 
-    it 'cleans up after itself' do
-      expect(chef_run).to delete_directory(install_dir).with(recursive: true)
-    end
-
-    it 'installs the new package' do
-      pkg = "/home/omnibus/snoopy/pkg/snoopy_#{build_version}-" \
-            "#{build_iteration}_amd64.deb"
-      provider = Chef::Provider::Package::Dpkg
-      expect(chef_run).to install_package(pkg).with(provider: provider)
+    it 'runs fpm-cook' do
+      expect(chef_run).to run_execute('fpm-cook')
+        .with(cwd: File.expand_path('~/fpm-recipes/snoopy'),
+              environment: { 'BUILD_VERSION' => '2.4.4',
+                             'BUILD_REVISION' => '1' })
     end
   end
 
@@ -79,17 +56,6 @@ describe 'snoopy-omnibus::build' do
 
     it 'ensures the APT cache is refreshed' do
       expect(chef_run).to include_recipe('apt')
-    end
-
-    it 'creates an artifact directory' do
-      d = '/snoopy/pkg/ubuntu/trusty'
-      expect(chef_run).to create_directory(d).with(recursive: true)
-    end
-
-    it 'copies the package artifacts to the artifact dir' do
-      cmd = 'cp -rp /home/omnibus/snoopy/pkg/* /snoopy/pkg/ubuntu/trusty/'
-      expect(chef_run).to run_execute('copy package artifacts')
-        .with(command: cmd)
     end
   end
 

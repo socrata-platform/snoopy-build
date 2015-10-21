@@ -1,92 +1,44 @@
-Snoopy Omnibus Project
-======================
-[![Build Status](https://img.shields.io/travis/RoboticCheese/snoopy-omnibus.svg)][travis]
+Snoopy Build Project
+====================
+[![Build Status](https://img.shields.io/travis/socrata-platform/snoopy-build.svg)][travis]
 
-[travis]: https://travis-ci.org/RoboticCheese/snoopy-omnibus
+[travis]: https://travis-ci.org/socrata-platform/snoopy-build
 
-This project creates full-stack, platform-specific packages for Snoopy Logger.
+A project for building Snoopy Logger packages using FPM-Cookery.
 
-Installation
-------------
+This project currently builds for Ubuntu 14.04 only.
+
+***Why not use Omnibus?***
+
+Up until
+[recently](https://github.com/RoboticCheese/snoopy-omnibus/tree/43bd4428438c2d6171baecc1037fdb22eca2e38e),
+this project did. But an Omnibus pipeline is pretty heavyweight, especially
+for a simple application with no dependencies. A build can be completed much
+faster by bypassing Omnibus', e.g., installing RBEnv and compiling a fresh
+Ruby.
+
+Requirements
+============
+
+This project is distributed as a Chef cookbook that contains an FPM-Cookery
+recipe which can then be built automatically using Test Kitchen.
+
 You must have a sane Ruby 1.9+ environment with Bundler installed. Ensure all
 the required gems are installed:
 
 ```shell
-$ bundle install --binstubs
+bundle install
 ```
 
 Usage
------
+=====
 This project comes with a Test Kitchen config that handles all the builds
 automatically for the supported platforms. Normally, the CI server will kick
 off a Kitchen run, which will build the package, install it, verify the
 results, and publish the new package to PackageCloud.io.
 
-Should the need arise, Omnibus commands can still be manually run...
-
-***Build***
-
-You create a platform-specific package using the `build project` command:
-
-```shell
-$ bin/omnibus build snoopy
-```
-
-The platform/architecture type of the package created will match the platform
-where the `build project` command is invoked. For example, running this command
-on a MacBook Pro will generate a Mac OS X package. After the build completes
-packages will be available in the `pkg/` folder.
-
-***Clean***
-
-You can clean up all temporary files generated during the build process with
-the `clean` command:
-
-```shell
-$ bin/omnibus clean snoopy
-```
-
-Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/snoopy`) and
-the package cache directory (`/var/cache/omnibus/pkg`):
-
-```shell
-$ bin/omnibus clean snoopy --purge
-```
-
-***Publish***
-
-Omnibus has a built-in mechanism for releasing to a variety of "backends", such
-as Amazon S3. You must set the proper credentials in your `omnibus.rb` config
-file or specify them via the command line.
-
-```shell
-$ bin/omnibus publish path/to/*.deb --backend s3
-```
-
-***Help***
-
-Full help for the Omnibus command line interface can be accessed with the
-`help` command:
-
-```shell
-$ bin/omnibus help
-```
-
-Version Manifest
-----------------
-Git-based software definitions may specify branches as their
-default_version. In this case, the exact git revision to use will be
-determined at build-time unless a project override (see below) or
-external version manifest is used.  To generate a version manifest use
-the `omnibus manifest` command:
-
-```
-omnibus manifest PROJECT -l warn
-```
-
-This will output a JSON-formatted manifest containing the resolved
-version of every software definition.
+Should the need arise, `fpm-cook` commands can still be run manually from
+the recipe directory in `files/default/fpm-recipes/snoopy/`.
 
 Contributing
 ============
@@ -100,9 +52,9 @@ Contributing
 
 License & Authors
 =================
-- Author: Jonathan Hartman <j@hartman.io>
+- Author: Jonathan Hartman <jonathan.hartman@socrata.com>
 
-Copyright 2015 Jonathan Hartman
+Copyright 2015 Socrata, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

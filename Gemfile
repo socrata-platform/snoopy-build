@@ -28,10 +28,10 @@ group :integration do
 end
 
 group :build do
-  gem 'omnibus'
-  gem 'omnibus-software', github: 'opscode/omnibus-software'
+  gem 'fpm-cookery'
   gem 'chef', '>= 12'
   gem 'berkshelf', '>= 4'
   gem 'test-kitchen'
   gem 'kitchen-vagrant'
+  gem 'kitchen-localhost'
 end

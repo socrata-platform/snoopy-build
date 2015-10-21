@@ -1,7 +1,7 @@
 # Encoding: UTF-8
 #
 # Cookbook Name:: snoopy-build
-# Recipe:: default
+# Recipe:: verify
 #
 # Copyright 2015 Socrata, Inc.
 #
@@ -18,6 +18,18 @@
 # limitations under the License.
 #
 
-include_recipe "#{cookbook_name}::build"
-include_recipe "#{cookbook_name}::verify"
-# Don't run the deploy recipe by default, just in case
+gem_package 'serverspec'
+
+version = node['snoopy_build']['build_version']
+revision = node['snoopy_build']['build_revision']
+
+package File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
+                  "snoopy_#{version}-#{revision}_amd64.deb") do
+  provider Chef::Provider::Package::Dpkg
+end
+
+remote_directory File.expand_path('~/spec')
+
+execute 'rspec */*_spec.rb -f d' do
+  cwd File.expand_path('~/spec')
+end

@@ -1,11 +1,11 @@
 # Encoding: UTF-8
 #
 # rubocop:disable SingleSpaceBeforeFirstArg
-name             'omnibus'
+name             'ruby'
 maintainer       'test'
 maintainer_email 'example@example.com'
 license          'apache2'
-description      'omnibus'
-long_description 'omnibus'
+description      'ruby'
+long_description 'ruby'
 version          '0.0.1'
 # rubocop:enable SingleSpaceBeforeFirstArg

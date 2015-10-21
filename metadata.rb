@@ -1,7 +1,7 @@
 # Encoding: UTF-8
 #
 # rubocop:disable SingleSpaceBeforeFirstArg
-name             'snoopy-omnibus'
+name             'snoopy-build'
 maintainer       'Jonathan Hartman'
 maintainer_email 'jonathan.hartman@socrata.com'
 license          'apache2'
@@ -10,7 +10,8 @@ long_description 'Builds Snoopy packages'
 version          '0.0.1'
 
 depends          'apt'
-depends          'omnibus'
+depends          'build-essential'
+depends          'ruby'
 
 supports         'ubuntu'
 # rubocop:enable SingleSpaceBeforeFirstArg
