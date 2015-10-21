@@ -40,6 +40,15 @@ results, and publish the new package to PackageCloud.io.
 Should the need arise, `fpm-cook` commands can still be run manually from
 the recipe directory in `files/default/fpm-recipes/snoopy/`.
 
+Attributes
+==========
+The included attributes file controls the build version and revision to use
+for the package, defaulting to the most recent version of snoopy released and a
+build of 1.
+
+    default['snoopy_build']['build_version']
+    default['snoopy_build']['build_revision']
+
 Contributing
 ============
 
