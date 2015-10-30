@@ -1,5 +1,5 @@
 driver:
-  name: localhost
+  name: docker
 
 suites:
   - name: default

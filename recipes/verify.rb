@@ -23,9 +23,20 @@ gem_package 'serverspec'
 version = node['snoopy_build']['build_version']
 revision = node['snoopy_build']['build_revision']
 
-package File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
-                  "snoopy_#{version}-#{revision}_amd64.deb") do
-  provider Chef::Provider::Package::Dpkg
+pkg_file = case node['platform_family']
+           when 'debian'
+             "snoopy_#{version}-#{revision}_amd64.deb"
+           when 'rhel'
+             "snoopy-#{version}-#{revision}.x86_64.rpm"
+           end
+
+package File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'), pkg_file) do
+  provider case node['platform_faily']
+           when 'debian'
+             Chef::Provider::Package::Dpkg
+           when 'rhel'
+             Chef::Provider::Packaage::Rpm
+           end
 end
 
 remote_directory File.expand_path('~/spec')

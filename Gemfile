@@ -33,5 +33,5 @@ group :build do
   gem 'berkshelf', '>= 4'
   gem 'test-kitchen'
   gem 'kitchen-vagrant'
-  gem 'kitchen-localhost'
+  gem 'kitchen-docker'
 end
