@@ -26,10 +26,20 @@ version = node['snoopy_build']['build_version']
 revision = node['snoopy_build']['build_revision']
 
 pc_token = node['snoopy_build']['package_cloud_token']
-pc_path = "#{user}/#{repo}/#{node['platform']}/#{node['lsb']['codename']}"
-pkg_path = File.join(File.expand_path('~/fpm-recipes/snoopy/pkg/'),
-                     "snoopy_#{version}-#{revision}_amd64.deb")
+pc_path = case node['platform_family']
+          when 'debian'
+            "#{user}/#{repo}/#{node['platform']}/#{node['lsb']['codename']}"
+          when 'rhel'
+            "#{user}/#{repo}/el/#{node['platform_version'].to_i}"
+          end
+pkg_dir = File.expand_path('~/fpm-recipes/snoopy/pkg')
+pkg_file = case node['platform_family']
+           when 'debian'
+             "snoopy_#{version}-#{revision}_amd64.deb"
+           when 'rhel'
+             "snoopy-#{version}-#{revision}.x86_64.rpm"
+           end
 
-execute "package_cloud push #{pc_path} #{pkg_path}" do
+execute "package_cloud push #{pc_path} #{File.join(pkg_dir, pkg_file)}" do
   environment 'PACKAGECLOUD_TOKEN' => pc_token
 end

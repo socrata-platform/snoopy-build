@@ -45,4 +45,17 @@ describe 'snoopy-build::deploy' do
       )
     end
   end
+
+  context 'CentOS 7.0' do
+    let(:platform) { { platform: 'centos', version: '7.0' } }
+
+    it 'uploads the correct new package' do
+      cmd = 'package_cloud push socrata-platform/snoopy/el/7 ' \
+            "#{File.expand_path('~/fpm-recipes/snoopy/pkg')}/snoopy-2.4.4-1." \
+            'x86_64.rpm'
+      expect(chef_run).to run_execute(cmd).with(
+        environment: { 'PACKAGECLOUD_TOKEN' => 'testtest' }
+      )
+    end
+  end
 end
