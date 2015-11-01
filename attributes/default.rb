@@ -23,4 +23,4 @@ require 'net/http'
 default['snoopy_build']['build_version'] = Net::HTTP.get(
   URI('http://source.a2o.si/download/snoopy/snoopy-latest-version.txt')
 ).strip
-default['snoopy_build']['build_revision'] = 2
+default['snoopy_build']['build_revision'] = 3
