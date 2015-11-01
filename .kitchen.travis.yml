@@ -1,5 +1,6 @@
 driver:
-  name: localhost
+  name: docker
+  privileged: true
 
 suites:
   - name: default

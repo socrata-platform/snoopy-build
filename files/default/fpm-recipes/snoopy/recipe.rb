@@ -42,9 +42,14 @@ class Snoopy < FPM::Cookery::Recipe
 
   license 'Apache, version 2.0'
 
-  build_depends 'curl', 'debhelper', 'dh-autoreconf', 'socat'
+  platforms [:debian, :ubuntu] do
+    build_depends %w(curl debhelper dh-autoreconf socat)
+    depends 'debconf'
+  end
 
-  depends 'debconf'
+  platforms [:redhat, :centos, :scientific] do
+    build_depends %w(autoconf automake socat rpm-build)
+  end
 
   def build
     safesystem './bootstrap.sh'
