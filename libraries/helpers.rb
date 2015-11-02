@@ -91,11 +91,20 @@ module SnoopyBuildCookbook
       end
 
       #
-      # Return the node repo, token, and user attributes.
+      # Provide a single method one can use to pass in and save the requisite
+      # repo, user, and token attributes.
       #
-      %w(repo token user).each do |m|
-        define_method(m) { node['snoopy_build']["package_cloud_#{m}"] }
+      # @param repo [String] the PackageCloud repository
+      # @param user [String] the PackageCloud username
+      # @param token [String] the PackageCloud API token
+      #
+      def configure!(repo, user, token)
+        @repo = repo
+        @user = user
+        @token = token
       end
+
+      attr_reader :repo, :user, :token
     end
   end
 end

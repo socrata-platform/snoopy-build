@@ -116,20 +116,16 @@ describe SnoopyBuildCookbook::Helpers do
     end
   end
 
-  %i(repo token user).each do |attr|
-    describe ".#{attr}" do
-      let(attr) { "some_#{attr}" }
-      let(:node) do
-        { 'snoopy_build' => { "package_cloud_#{attr}" => send(attr) } }
-      end
+  describe '.configure!' do
+    let(:repo) { 'a_repo' }
+    let(:user) { 'a_user' }
+    let(:token) { 'abc123' }
 
-      before(:each) do
-        allow(described_class).to receive(:node).and_return(node)
-      end
-
-      it "returns the #{attr} attribute" do
-        expect(described_class.send(attr)).to eq(send(attr))
-      end
+    it 'saves the input strings as variables for use later' do
+      described_class.configure!(repo, user, token)
+      expect(described_class.repo).to eq(repo)
+      expect(described_class.user).to eq(user)
+      expect(described_class.token).to eq(token)
     end
   end
 end

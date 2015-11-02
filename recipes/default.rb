@@ -26,6 +26,11 @@ end
 
 ruby_block 'Calculate package version' do
   block do
+    SnoopyBuildCookbook::Helpers.configure!(
+      node['snoopy_build']['package_cloud_repo'],
+      node['snoopy_build']['package_cloud_user'],
+      node['snoopy_build']['package_cloud_token']
+    )
     version = SnoopyBuildCookbook::Helpers.version
     revision = SnoopyBuildCookbook::Helpers.revision
     node.default['snoopy_build']['build_version'] = version
