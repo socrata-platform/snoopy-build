@@ -2,7 +2,7 @@
 
 require_relative '../spec_helper'
 
-describe 'snoopy-build::verify' do
+describe 'snoopy-build::_verify' do
   let(:platform) { nil }
   let(:build_version) { '2.4.4' }
   let(:build_revision) { 1 }
@@ -38,7 +38,8 @@ describe 'snoopy-build::verify' do
     it 'installs the correct package file' do
       path = File.expand_path('~/fpm-recipes/snoopy/pkg/' \
                               'snoopy_2.4.4-1_amd64.deb')
-      expect(chef_run).to install_dpkg_package(path)
+      expect(chef_run).to install_dpkg_package('snoopy')
+        .with(package_name: path)
     end
   end
 
@@ -50,7 +51,8 @@ describe 'snoopy-build::verify' do
     it 'installs the correct package file' do
       path = File.expand_path('~/fpm-recipes/snoopy/pkg/' \
                               'snoopy-2.4.4-1.x86_64.rpm')
-      expect(chef_run).to install_rpm_package(path)
+      expect(chef_run).to install_rpm_package('snoopy')
+        .with(package_name: path)
     end
   end
 end

@@ -1,7 +1,7 @@
 # Encoding: UTF-8
 #
 # Cookbook Name:: snoopy-build
-# Recipe:: verify
+# Recipe:: _build
 #
 # Copyright 2015 Socrata, Inc.
 #
@@ -18,22 +18,29 @@
 # limitations under the License.
 #
 
-gem_package 'serverspec'
-
-version = node['snoopy_build']['build_version']
-revision = node['snoopy_build']['build_revision']
-
-case node['platform_family']
-when 'debian'
-  dpkg_package File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
-                         "snoopy_#{version}-#{revision}_amd64.deb")
-when 'rhel'
-  rpm_package File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
-                        "snoopy-#{version}-#{revision}.x86_64.rpm")
+package 'snoopy' do
+  action :remove
 end
 
-remote_directory File.expand_path('~/spec')
+directory File.expand_path('~/fpm-recipes/snoopy/pkg') do
+  action :delete
+  recursive true
+end
 
-execute 'rspec */*_spec.rb -f d' do
-  cwd File.expand_path('~/spec')
+include_recipe 'apt' if node['platform_family'] == 'debian'
+include_recipe 'build-essential'
+include_recipe 'ruby'
+
+gem_package 'fpm-cookery'
+
+remote_directory File.expand_path('~/fpm-recipes')
+
+execute 'fpm-cook' do
+  cwd File.expand_path('~/fpm-recipes/snoopy')
+  environment lazy {
+    {
+      'BUILD_VERSION' => node['snoopy_build']['build_version'],
+      'BUILD_REVISION' => node['snoopy_build']['build_revision'].to_s
+    }
+  }
 end

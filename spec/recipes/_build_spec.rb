@@ -2,7 +2,7 @@
 
 require_relative '../spec_helper'
 
-describe 'snoopy-build::build' do
+describe 'snoopy-build::_build' do
   let(:build_version) { '2.4.4' }
   let(:build_revision) { 1 }
   let(:runner) do
@@ -59,13 +59,13 @@ describe 'snoopy-build::build' do
     end
   end
 
-  # context 'CentOS 7.0' do
-  #   let(:platform) { { platform: 'centos', version: '7.0' } }
+  context 'CentOS 7.0' do
+    let(:platform) { { platform: 'centos', version: '7.0' } }
 
-  #   it_behaves_like 'any platform'
+    it_behaves_like 'any platform'
 
-  #   it 'does not run the APT recipe' do
-  #     expect(chef_run).to_not include_recipe('apt')
-  #   end
-  # end
+    it 'does not run the APT recipe' do
+      expect(chef_run).to_not include_recipe('apt')
+    end
+  end
 end

@@ -6,15 +6,18 @@ describe 'snoopy-build::default' do
   let(:runner) { ChefSpec::SoloRunner.new }
   let(:chef_run) { runner.converge(described_recipe) }
 
-  it 'runs the build recipe' do
-    expect(chef_run).to include_recipe('snoopy-build::build')
+  it 'installs the packagecloud gem' do
+    expect(chef_run).to install_chef_gem('packagecloud')
+      .with(compile_time: false)
   end
 
-  it 'runs the verify recipe' do
-    expect(chef_run).to include_recipe('snoopy-build::verify')
+  it 'runs the version calculator ruby block' do
+    expect(chef_run).to run_ruby_block('Calculate package version')
   end
 
-  it 'does _not_ run the deploy recipe' do
-    expect(chef_run).to_not include_recipe('snoopy-build::deploy')
+  %w(_build _verify _deploy).each do |r|
+    it "runs the '#{r}' recipe" do
+      expect(chef_run).to include_recipe("snoopy-build::#{r}")
+    end
   end
 end
