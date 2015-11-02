@@ -69,8 +69,8 @@ describe 'snoopy-build::_verify' do
     end
   end
 
-  context 'CentOS 6.7' do
-    let(:platform) { { platform: 'centos', version: '6.7' } }
+  context 'CentOS 6.6' do
+    let(:platform) { { platform: 'centos', version: '6.6' } }
 
     it_behaves_like 'any platform'
 

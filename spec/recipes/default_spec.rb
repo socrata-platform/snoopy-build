@@ -7,7 +7,7 @@ describe 'snoopy-build::default' do
   let(:chef_run) { runner.converge(described_recipe) }
 
   it 'installs the packagecloud gem' do
-    expect(chef_run).to install_chef_gem('packagecloud')
+    expect(chef_run).to install_chef_gem('packagecloud-ruby')
       .with(compile_time: false)
   end
 

@@ -29,6 +29,7 @@ end
 
 group :build do
   gem 'fpm-cookery'
+  gem 'packagecloud-ruby'
   gem 'chef', '>= 12'
   gem 'berkshelf', '>= 4'
   gem 'test-kitchen'

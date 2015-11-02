@@ -51,8 +51,8 @@ describe 'snoopy-build::_deploy' do
       it_behaves_like 'any platform'
     end
 
-    context 'CentOS 6.7' do
-      let(:platform) { { platform: 'centos', version: '6.7' } }
+    context 'CentOS 6.6' do
+      let(:platform) { { platform: 'centos', version: '6.6' } }
 
       it_behaves_like 'any platform'
     end
@@ -112,8 +112,8 @@ describe 'snoopy-build::_deploy' do
       end
     end
 
-    context 'CentOS 6.7' do
-      let(:platform) { { platform: 'centos', version: '6.7' } }
+    context 'CentOS 6.6' do
+      let(:platform) { { platform: 'centos', version: '6.6' } }
 
       it_behaves_like 'any platform'
 

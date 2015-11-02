@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-chef_gem 'packagecloud' do
+chef_gem 'packagecloud-ruby' do
   if Chef::Resource::ChefGem.instance_methods(false).include?(:compile_time)
     compile_time false
   end
@@ -26,32 +26,10 @@ end
 
 ruby_block 'Calculate package version' do
   block do
-    require 'json'
-    require 'net/http'
-    require 'packagecloud'
-
-    version = Net::HTTP.get(
-      URI('http://source.a2o.si/download/snoopy/snoopy-latest-version.txt')
-    ).strip
+    version = SnoopyBuildCookbook::Helpers.version
+    revision = SnoopyBuildCookbook::Helpers.revision
     node.default['snoopy_build']['build_version'] = version
-
-    if node['snoopy_build']['package_cloud_token']
-      credentials = Packagecloud::Credentials.new(
-        node['snoopy_build']['package_cloud_user'],
-        node['snoopy_build']['package_cloud_token']
-      )
-      client = Packagecloud::Client.new(credentials)
-      pkgs = client.list_packages(node['snoopy_build']['package_cloud_repo'])
-             .response.select { |p| p['version'] == version }
-      revision = if pkgs.length > 0
-                   pkgs.sort_by { |p| p['release'] }.last['release'].to_i
-                 else
-                   0
-                 end
-      node.default['snoopy_build']['build_revision'] = revision + 1
-    else
-      node.default['snoopy_build']['build_revision'] = 1
-    end
+    node.default['snoopy_build']['build_revision'] = revision
   end
 end
 
