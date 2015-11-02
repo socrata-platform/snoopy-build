@@ -48,10 +48,15 @@ class Snoopy < FPM::Cookery::Recipe
   end
 
   platforms [:redhat, :centos, :scientific] do
-    build_depends %w(autoconf automake socat rpm-build)
+    build_depends %w(autoconf automake socat rpm-build libtool)
   end
 
   def build
+    inline_replace 'configure.ac' do |s|
+      # This macro doesn't exist in RHEL6 and isn't really needed, since we
+      # already know the version at this point anyway.
+      s.gsub!(/m4_esyscmd_s.*/, "[#{version}],")
+    end
     safesystem './bootstrap.sh'
     configure prefix: '/'
     make
