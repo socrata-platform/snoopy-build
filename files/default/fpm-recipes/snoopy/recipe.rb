@@ -42,13 +42,15 @@ class Snoopy < FPM::Cookery::Recipe
 
   license 'Apache, version 2.0'
 
+  build_depends %w(curl tar socat automake autoconf libtool)
+
   platforms [:debian, :ubuntu] do
-    build_depends %w(curl debhelper dh-autoreconf socat)
+    build_depends %w(debhelper dh-autoreconf)
     depends 'debconf'
   end
 
   platforms [:redhat, :centos, :scientific] do
-    build_depends %w(autoconf automake socat rpm-build libtool)
+    build_depends %w(rpm-build)
   end
 
   def build
