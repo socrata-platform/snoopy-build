@@ -30,6 +30,9 @@ end
 include_recipe 'apt' if node['platform_family'] == 'debian'
 include_recipe 'build-essential'
 include_recipe 'ruby'
+if node['platform_family'] == 'rhel' && node['platform_version'].to_i < 7
+  include_recipe 'yum-epel'
+end
 
 gem_package 'fpm-cookery'
 

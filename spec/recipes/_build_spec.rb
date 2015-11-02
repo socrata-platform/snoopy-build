@@ -57,6 +57,24 @@ describe 'snoopy-build::_build' do
     it 'ensures the APT cache is refreshed' do
       expect(chef_run).to include_recipe('apt')
     end
+
+    it 'does not configure EPEL' do
+      expect(chef_run).to_not include_recipe('yum-epel')
+    end
+  end
+
+  context 'Ubuntu 12.04' do
+    let(:platform) { { platform: 'ubuntu', version: '12.04' } }
+
+    it_behaves_like 'any platform'
+
+    it 'ensures the APT cache is refreshed' do
+      expect(chef_run).to include_recipe('apt')
+    end
+
+    it 'does not configure EPEL' do
+      expect(chef_run).to_not include_recipe('yum-epel')
+    end
   end
 
   context 'CentOS 7.0' do
@@ -66,6 +84,24 @@ describe 'snoopy-build::_build' do
 
     it 'does not run the APT recipe' do
       expect(chef_run).to_not include_recipe('apt')
+    end
+
+    it 'does not configure EPEL' do
+      expect(chef_run).to_not include_recipe('yum-epel')
+    end
+  end
+
+  context 'CentOS 6.7' do
+    let(:platform) { { platform: 'centos', version: '6.7' } }
+
+    it_behaves_like 'any platform'
+
+    it 'does not run the APT recipe' do
+      expect(chef_run).to_not include_recipe('apt')
+    end
+
+    it 'configures EPEL' do
+      expect(chef_run).to include_recipe('yum-epel')
     end
   end
 end

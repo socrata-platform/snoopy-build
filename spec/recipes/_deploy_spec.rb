@@ -39,8 +39,20 @@ describe 'snoopy-build::_deploy' do
       it_behaves_like 'any platform'
     end
 
+    context 'Ubuntu 12.04' do
+      let(:platform) { { platform: 'ubuntu', version: '12.04' } }
+
+      it_behaves_like 'any platform'
+    end
+
     context 'CentOS 7.0' do
       let(:platform) { { platform: 'centos', version: '7.0' } }
+
+      it_behaves_like 'any platform'
+    end
+
+    context 'CentOS 6.7' do
+      let(:platform) { { platform: 'centos', version: '6.7' } }
 
       it_behaves_like 'any platform'
     end
@@ -70,6 +82,21 @@ describe 'snoopy-build::_deploy' do
       end
     end
 
+    context 'Ubuntu 12.04' do
+      let(:platform) { { platform: 'ubuntu', version: '12.04' } }
+
+      it_behaves_like 'any platform'
+
+      it 'uploads the correct new package' do
+        cmd = 'package_cloud push socrata-platform/snoopy/ubuntu/precise ' \
+              "#{File.expand_path('~/fpm-recipes/snoopy/pkg')}/snoopy_2.4.4" \
+              '-1_amd64.deb'
+        expect(chef_run).to run_execute(cmd).with(
+          environment: { 'PACKAGECLOUD_TOKEN' => 'testtest' }
+        )
+      end
+    end
+
     context 'CentOS 7.0' do
       let(:platform) { { platform: 'centos', version: '7.0' } }
 
@@ -77,6 +104,21 @@ describe 'snoopy-build::_deploy' do
 
       it 'uploads the correct new package' do
         cmd = 'package_cloud push socrata-platform/snoopy/el/7 ' \
+              "#{File.expand_path('~/fpm-recipes/snoopy/pkg')}/snoopy-2.4.4" \
+              '-1.x86_64.rpm'
+        expect(chef_run).to run_execute(cmd).with(
+          environment: { 'PACKAGECLOUD_TOKEN' => 'testtest' }
+        )
+      end
+    end
+
+    context 'CentOS 6.7' do
+      let(:platform) { { platform: 'centos', version: '6.7' } }
+
+      it_behaves_like 'any platform'
+
+      it 'uploads the correct new package' do
+        cmd = 'package_cloud push socrata-platform/snoopy/el/6 ' \
               "#{File.expand_path('~/fpm-recipes/snoopy/pkg')}/snoopy-2.4.4" \
               '-1.x86_64.rpm'
         expect(chef_run).to run_execute(cmd).with(

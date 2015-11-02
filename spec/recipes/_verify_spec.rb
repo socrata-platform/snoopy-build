@@ -43,8 +43,34 @@ describe 'snoopy-build::_verify' do
     end
   end
 
+  context 'Ubuntu 12.04' do
+    let(:platform) { { platform: 'ubuntu', version: '12.04' } }
+
+    it_behaves_like 'any platform'
+
+    it 'installs the correct package file' do
+      path = File.expand_path('~/fpm-recipes/snoopy/pkg/' \
+                              'snoopy_2.4.4-1_amd64.deb')
+      expect(chef_run).to install_dpkg_package('snoopy')
+        .with(package_name: path)
+    end
+  end
+
   context 'CentOS 7.0' do
     let(:platform) { { platform: 'centos', version: '7.0' } }
+
+    it_behaves_like 'any platform'
+
+    it 'installs the correct package file' do
+      path = File.expand_path('~/fpm-recipes/snoopy/pkg/' \
+                              'snoopy-2.4.4-1.x86_64.rpm')
+      expect(chef_run).to install_rpm_package('snoopy')
+        .with(package_name: path)
+    end
+  end
+
+  context 'CentOS 6.7' do
+    let(:platform) { { platform: 'centos', version: '6.7' } }
 
     it_behaves_like 'any platform'
 
