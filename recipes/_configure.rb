@@ -1,7 +1,7 @@
 # Encoding: UTF-8
 #
 # Cookbook Name:: snoopy-build
-# Recipe:: default
+# Recipe:: _configure
 #
 # Copyright 2015 Socrata, Inc.
 #
@@ -18,7 +18,14 @@
 # limitations under the License.
 #
 
-include_recipe "#{cookbook_name}::_configure"
-include_recipe "#{cookbook_name}::_build"
-include_recipe "#{cookbook_name}::_verify"
-include_recipe "#{cookbook_name}::_deploy"
+chef_gem 'packagecloud-ruby' do
+  if Chef::Resource::ChefGem.instance_methods(false).include?(:compile_time)
+    compile_time false
+  end
+end
+
+ruby_block 'Configure the package builder helpers' do
+  block do
+    SnoopyBuildCookbook::Helpers.configure!(node)
+  end
+end

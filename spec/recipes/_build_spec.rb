@@ -3,16 +3,17 @@
 require_relative '../spec_helper'
 
 describe 'snoopy-build::_build' do
-  let(:build_version) { '2.4.4' }
-  let(:build_revision) { 1 }
-  let(:runner) do
-    ChefSpec::SoloRunner.new(platform) do |node|
-      %w(build_version build_revision).each do |a|
-        node.set['snoopy_build'][a] = send(a)
-      end
+  let(:platform) { nil }
+  let(:version) { '2.4.4' }
+  let(:revision) { 1 }
+  let(:runner) { ChefSpec::SoloRunner.new(platform) }
+  let(:chef_run) { runner.converge(described_recipe) }
+
+  before(:each) do
+    %i(version revision).each do |m|
+      allow(SnoopyBuildCookbook::Helpers).to receive(m).and_return(send(m))
     end
   end
-  let(:chef_run) { runner.converge(described_recipe) }
 
   shared_examples_for 'any platform' do
     it 'removes any currently installed snoopy package' do
@@ -43,9 +44,7 @@ describe 'snoopy-build::_build' do
 
     it 'runs fpm-cook' do
       expect(chef_run).to run_execute('fpm-cook')
-        .with(cwd: File.expand_path('~/fpm-recipes/snoopy'),
-              environment: { 'BUILD_VERSION' => '2.4.4',
-                             'BUILD_REVISION' => '1' })
+        .with(cwd: File.expand_path('~/fpm-recipes/snoopy'))
     end
   end
 

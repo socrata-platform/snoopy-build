@@ -28,6 +28,53 @@ module SnoopyBuildCookbook
   module Helpers
     class << self
       #
+      # Upload a completed package to PackageCloud.
+      #
+      def push_package!
+        client.put_package('snoopy', package)
+      end
+
+      #
+      # Return a package instance for the configured package and distro.
+      #
+      # @return [Packagecloud::Package] a package instance for upload
+      #
+      def package
+        Packagecloud::Package.new(open(package_file), distro_id)
+      end
+
+      #
+      # Build the path to the package file based on the configured platform
+      # information.
+      #
+      # @return [String] the package file's path
+      #
+      def package_file
+        File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
+                  case platform_family
+                  when 'debian'
+                    "snoopy_#{version}-#{revision}_amd64.deb"
+                  when 'rhel'
+                    "snoopy-#{version}-#{revision}.x86_64.rpm"
+                  end)
+      end
+
+      #
+      # Use the saved platform information to build the appropriate distro ID.
+      #
+      # @return [Hash] a Packagecloud distro ID
+      #
+      def distro_id
+        distro = case platform_family
+                 when 'debian'
+                   "#{platform}/#{lsb_codename}"
+                 when 'rhel'
+                   "el/#{platform_version.to_i}"
+                 end
+        client.find_distribution_id(distro)
+      end
+
+      #
       # Grab the text file with the latest released version of Snoopy.
       #
       # @return [String] the most recent version
@@ -92,19 +139,28 @@ module SnoopyBuildCookbook
 
       #
       # Provide a single method one can use to pass in and save the requisite
-      # repo, user, and token attributes.
+      # PackageCloud and platform attributes.
       #
-      # @param repo [String] the PackageCloud repository
-      # @param user [String] the PackageCloud username
-      # @param token [String] the PackageCloud API token
+      # @param node [Chef::Node] a Chef node object with the attributes we need
       #
-      def configure!(repo, user, token)
-        @repo = repo
-        @user = user
-        @token = token
+      def configure!(node)
+        @repo = node['snoopy_build']['package_cloud_repo']
+        @user = node['snoopy_build']['package_cloud_user']
+        @token = node['snoopy_build']['package_cloud_token']
+        @platform = node['platform']
+        @platform_version = node['platform_version']
+        @lsb_codename = node['lsb'] && node['lsb']['codename']
+        @platform_family = node['platform_family']
+        self
       end
 
-      attr_reader :repo, :user, :token
+      attr_reader :repo,
+                  :user,
+                  :token,
+                  :platform,
+                  :platform_version,
+                  :lsb_codename,
+                  :platform_family
     end
   end
 end

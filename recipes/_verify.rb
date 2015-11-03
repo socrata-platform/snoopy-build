@@ -23,21 +23,11 @@ gem_package 'serverspec'
 case node['platform_family']
 when 'debian'
   dpkg_package 'snoopy' do
-    package_name lazy {
-      version = node['snoopy_build']['build_version']
-      revision = node['snoopy_build']['build_revision']
-      File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
-                "snoopy_#{version}-#{revision}_amd64.deb")
-    }
+    package_name lazy { SnoopyBuildCookbook::Helpers.package_file }
   end
 when 'rhel'
   rpm_package 'snoopy' do
-    package_name lazy {
-      version = node['snoopy_build']['build_version']
-      revision = node['snoopy_build']['build_revision']
-      File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
-                "snoopy-#{version}-#{revision}.x86_64.rpm")
-    }
+    package_name lazy { SnoopyBuildCookbook::Helpers.package_file }
   end
 end
 
