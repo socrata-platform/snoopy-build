@@ -1,7 +1,7 @@
 # Encoding: UTF-8
 #
 # Cookbook Name:: snoopy-build
-# Recipe:: build
+# Recipe:: _verify
 #
 # Copyright 2015 Socrata, Inc.
 #
@@ -18,25 +18,21 @@
 # limitations under the License.
 #
 
-package 'snoopy' do
-  action :remove
+gem_package 'serverspec'
+
+case node['platform_family']
+when 'debian'
+  dpkg_package 'snoopy' do
+    package_name lazy { SnoopyBuildCookbook::Helpers.package_file }
+  end
+when 'rhel'
+  rpm_package 'snoopy' do
+    package_name lazy { SnoopyBuildCookbook::Helpers.package_file }
+  end
 end
 
-directory File.expand_path('~/fpm-recipes/snoopy/pkg') do
-  action :delete
-  recursive true
-end
+remote_directory File.expand_path('~/spec')
 
-include_recipe 'apt' if node['platform_family'] == 'debian'
-include_recipe 'build-essential'
-include_recipe 'ruby'
-
-gem_package 'fpm-cookery'
-
-remote_directory File.expand_path('~/fpm-recipes')
-
-execute 'fpm-cook' do
-  cwd File.expand_path('~/fpm-recipes/snoopy')
-  environment('BUILD_VERSION' => node['snoopy_build']['build_version'],
-              'BUILD_REVISION' => node['snoopy_build']['build_revision'].to_s)
+execute 'rspec */*_spec.rb -f d' do
+  cwd File.expand_path('~/spec')
 end

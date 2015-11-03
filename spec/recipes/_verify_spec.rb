@@ -2,18 +2,16 @@
 
 require_relative '../spec_helper'
 
-describe 'snoopy-build::verify' do
+describe 'snoopy-build::_verify' do
   let(:platform) { nil }
-  let(:build_version) { '2.4.4' }
-  let(:build_revision) { 1 }
-  let(:runner) do
-    ChefSpec::SoloRunner.new(platform) do |node|
-      %w(build_version build_revision).each do |a|
-        node.set['snoopy_build'][a] = send(a)
-      end
-    end
-  end
+  let(:package_file) { '/tmp/package.pkg' }
+  let(:runner) { ChefSpec::SoloRunner.new(platform) }
   let(:chef_run) { runner.converge(described_recipe) }
+
+  before(:each) do
+    allow(SnoopyBuildCookbook::Helpers).to receive(:package_file)
+      .and_return(package_file)
+  end
 
   shared_examples_for 'any platform' do
     it 'installs the serverspec gem' do
@@ -30,27 +28,23 @@ describe 'snoopy-build::verify' do
     end
   end
 
-  context 'Ubuntu 14.04' do
+  context 'Ubuntu' do
     let(:platform) { { platform: 'ubuntu', version: '14.04' } }
 
     it_behaves_like 'any platform'
 
-    it 'installs the correct package file' do
-      path = File.expand_path('~/fpm-recipes/snoopy/pkg/' \
-                              'snoopy_2.4.4-1_amd64.deb')
-      expect(chef_run).to install_dpkg_package(path)
+    it 'uses the correct package resource' do
+      expect(chef_run).to install_dpkg_package('snoopy')
     end
   end
 
-  context 'CentOS 7.0' do
+  context 'CentOS' do
     let(:platform) { { platform: 'centos', version: '7.0' } }
 
     it_behaves_like 'any platform'
 
-    it 'installs the correct package file' do
-      path = File.expand_path('~/fpm-recipes/snoopy/pkg/' \
-                              'snoopy-2.4.4-1.x86_64.rpm')
-      expect(chef_run).to install_rpm_package(path)
+    it 'uses the correct package resource' do
+      expect(chef_run).to install_rpm_package('snoopy')
     end
   end
 end

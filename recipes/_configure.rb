@@ -1,7 +1,7 @@
 # Encoding: UTF-8
 #
 # Cookbook Name:: snoopy-build
-# Recipe:: verify
+# Recipe:: _configure
 #
 # Copyright 2015 Socrata, Inc.
 #
@@ -18,22 +18,14 @@
 # limitations under the License.
 #
 
-gem_package 'serverspec'
-
-version = node['snoopy_build']['build_version']
-revision = node['snoopy_build']['build_revision']
-
-case node['platform_family']
-when 'debian'
-  dpkg_package File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
-                         "snoopy_#{version}-#{revision}_amd64.deb")
-when 'rhel'
-  rpm_package File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
-                        "snoopy-#{version}-#{revision}.x86_64.rpm")
+chef_gem 'packagecloud-ruby' do
+  if Chef::Resource::ChefGem.instance_methods(false).include?(:compile_time)
+    compile_time false
+  end
 end
 
-remote_directory File.expand_path('~/spec')
-
-execute 'rspec */*_spec.rb -f d' do
-  cwd File.expand_path('~/spec')
+ruby_block 'Configure the package builder helpers' do
+  block do
+    SnoopyBuildCookbook::Helpers.configure!(node)
+  end
 end

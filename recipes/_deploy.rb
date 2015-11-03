@@ -1,7 +1,7 @@
 # Encoding: UTF-8
 #
 # Cookbook Name:: snoopy-build
-# Recipe:: default
+# Recipe:: _deploy
 #
 # Copyright 2015 Socrata, Inc.
 #
@@ -18,7 +18,10 @@
 # limitations under the License.
 #
 
-include_recipe "#{cookbook_name}::_configure"
-include_recipe "#{cookbook_name}::_build"
-include_recipe "#{cookbook_name}::_verify"
-include_recipe "#{cookbook_name}::_deploy"
+ruby_block 'Push artifacts to PackageCloud' do
+  block do
+    SnoopyBuildCookbook::Helpers.push_package!
+  end
+
+  only_if { node['snoopy_build']['publish_artifacts'] }
+end
