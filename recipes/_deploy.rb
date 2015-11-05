@@ -20,7 +20,7 @@
 
 ruby_block 'Push artifacts to PackageCloud' do
   block do
-    SnoopyBuildCookbook::Helpers.push_package!
+    SnoopyBuildCookbook::Helpers::Builder.push_package!
   end
 
   only_if { node['snoopy_build']['publish_artifacts'] }

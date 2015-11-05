@@ -14,3 +14,10 @@ platforms:
 suites:
   - name: default
     run_list: snoopy-build::default
+    attributes:
+      snoopy_build:
+        build_version: <%=
+          require_relative 'libraries/helpers_coordinator'
+          SnoopyBuildCookbook::Helpers::Coordinator.version
+        %>
+        build_revision: 1

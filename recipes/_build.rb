@@ -42,8 +42,8 @@ execute 'fpm-cook' do
   cwd File.expand_path('~/fpm-recipes/snoopy')
   environment lazy {
     {
-      'BUILD_VERSION' => SnoopyBuildCookbook::Helpers.version,
-      'BUILD_REVISION' => SnoopyBuildCookbook::Helpers.revision.to_s
+      'BUILD_VERSION' => node['snoopy_build']['build_version'],
+      'BUILD_REVISION' => node['snoopy_build']['build_revision'].to_s
     }
   }
 end
