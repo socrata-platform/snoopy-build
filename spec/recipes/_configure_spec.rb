@@ -7,11 +7,15 @@ describe 'snoopy-build::_configure' do
   let(:token) { 'a_token' }
   let(:repo) { 'a_repo' }
   let(:platform) { nil }
+  let(:version) { '1.2.3' }
+  let(:revision) { 4 }
   let(:runner) do
     ChefSpec::SoloRunner.new(platform) do |node|
       %i(user token repo).each do |a|
         node.set['snoopy_build']["package_cloud_#{a}"] = send(a)
       end
+      node.set['snoopy_build']['build_version'] = version
+      node.set['snoopy_build']['build_revision'] = revision
     end
   end
   let(:chef_run) { runner.converge(described_recipe) }
@@ -45,7 +49,9 @@ describe 'snoopy-build::_configure' do
               platform: 'ubuntu',
               platform_version: '14.04',
               lsb_codename: 'trusty',
-              platform_family: 'debian')
+              platform_family: 'debian',
+              version: '1.2.3',
+              revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
         .old_run_action(:run)
     end
@@ -64,7 +70,9 @@ describe 'snoopy-build::_configure' do
               platform: 'ubuntu',
               platform_version: '12.04',
               lsb_codename: 'precise',
-              platform_family: 'debian')
+              platform_family: 'debian',
+              version: '1.2.3',
+              revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
         .old_run_action(:run)
     end
@@ -83,7 +91,9 @@ describe 'snoopy-build::_configure' do
               platform: 'centos',
               platform_version: '7.0.1406',
               lsb_codename: nil,
-              platform_family: 'rhel')
+              platform_family: 'rhel',
+              version: '1.2.3',
+              revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
         .old_run_action(:run)
     end
@@ -102,7 +112,9 @@ describe 'snoopy-build::_configure' do
               platform: 'centos',
               platform_version: '6.6',
               lsb_codename: nil,
-              platform_family: 'rhel')
+              platform_family: 'rhel',
+              version: '1.2.3',
+              revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
         .old_run_action(:run)
     end

@@ -33,7 +33,9 @@ module SnoopyBuildCookbook
         attr_reader :platform,
                     :platform_version,
                     :lsb_codename,
-                    :platform_family
+                    :platform_family,
+                    :version,
+                    :revision
         #
         # Add additional required config keys to those of the inherited Helpers
         # class.
@@ -42,12 +44,13 @@ module SnoopyBuildCookbook
         #
         def configure!(config)
           super
-          @platform = config.delete(:platform) || fail(MissingConfig, :platform)
-          @platform_version = config.delete(:platform_version) || \
-                              fail(MissingConfig, :platform_version)
+          %i(
+            platform platform_version platform_family version revision
+          ).each do |c|
+            instance_variable_set(:"@#{c}", config.delete(c)) || \
+              fail(MissingConfig, c)
+          end
           @lsb_codename = config.delete(:lsb_codename)
-          @platform_family = config.delete(:platform_family) || \
-                             fail(MissingConfig, :platform_family)
           self
         end
 

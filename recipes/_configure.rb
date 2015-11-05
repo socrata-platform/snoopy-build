@@ -33,7 +33,9 @@ ruby_block 'Configure the package builder helpers' do
       platform: node['platform'],
       platform_version: node['platform_version'],
       lsb_codename: node['lsb'] && node['lsb']['codename'],
-      platform_family: node['platform_family']
+      platform_family: node['platform_family'],
+      version: node['snoopy_build']['build_version'],
+      revision: node['snoopy_build']['build_revision']
     )
   end
 end

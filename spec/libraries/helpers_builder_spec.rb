@@ -12,6 +12,8 @@ describe SnoopyBuildCookbook::Helpers::Builder do
     let(:platform_version) { '1.2' }
     let(:lsb_codename) { 'a_codename' }
     let(:platform_family) { 'a_platform_family' }
+    let(:version) { '1.2.3' }
+    let(:revision) { 4 }
     let(:configured_class) do
       described_class.configure!(user: user,
                                  token: token,
@@ -19,7 +21,9 @@ describe SnoopyBuildCookbook::Helpers::Builder do
                                  platform: platform,
                                  platform_version: platform_version,
                                  lsb_codename: lsb_codename,
-                                 platform_family: platform_family)
+                                 platform_family: platform_family,
+                                 version: version,
+                                 revision: revision)
     end
 
     context 'all attributes provided' do
@@ -30,9 +34,12 @@ describe SnoopyBuildCookbook::Helpers::Builder do
       let(:platform_version) { '1.2' }
       let(:lsb_codename) { 'a_codename' }
       let(:platform_family) { 'a_platform_family' }
+      let(:version) { '1.2.3' }
+      let(:revision) { 4 }
 
       %i(
         user token repo platform platform_version lsb_codename platform_family
+        version revision
       ).each do |a|
         it "saves the #{a}" do
           expect(configured_class.send(a)).to eq(send(a))
@@ -44,7 +51,10 @@ describe SnoopyBuildCookbook::Helpers::Builder do
       end
     end
 
-    %i(user token repo platform platform_version platform_family).each do |a|
+    %i(
+      user token repo platform platform_version platform_family version
+      revision
+    ).each do |a|
       context "missing the #{a} attribute" do
         let(a) { nil }
 
