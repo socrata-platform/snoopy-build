@@ -21,4 +21,6 @@
 default['snoopy_build']['package_cloud_user'] = nil
 default['snoopy_build']['package_cloud_token'] = nil
 default['snoopy_build']['package_cloud_repo'] = nil
+default['snoopy_build']['build_version'] = nil
+default['snoopy_build']['build_revision'] = nil
 default['snoopy_build']['publish_artifacts'] = false

@@ -9,7 +9,7 @@ describe 'snoopy-build::_verify' do
   let(:chef_run) { runner.converge(described_recipe) }
 
   before(:each) do
-    allow(SnoopyBuildCookbook::Helpers).to receive(:package_file)
+    allow(SnoopyBuildCookbook::Helpers::Builder).to receive(:package_file)
       .and_return(package_file)
   end
 

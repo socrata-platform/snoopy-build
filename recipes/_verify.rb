@@ -23,11 +23,11 @@ gem_package 'serverspec'
 case node['platform_family']
 when 'debian'
   dpkg_package 'snoopy' do
-    package_name lazy { SnoopyBuildCookbook::Helpers.package_file }
+    package_name lazy { SnoopyBuildCookbook::Helpers::Builder.package_file }
   end
 when 'rhel'
   rpm_package 'snoopy' do
-    package_name lazy { SnoopyBuildCookbook::Helpers.package_file }
+    package_name lazy { SnoopyBuildCookbook::Helpers::Builder.package_file }
   end
 end
 

@@ -26,6 +26,14 @@ end
 
 ruby_block 'Configure the package builder helpers' do
   block do
-    SnoopyBuildCookbook::Helpers.configure!(node)
+    SnoopyBuildCookbook::Helpers::Builder.configure!(
+      user: node['snoopy_build']['package_cloud_user'],
+      token: node['snoopy_build']['package_cloud_token'],
+      repo: node['snoopy_build']['package_cloud_repo'],
+      platform: node['platform'],
+      platform_version: node['platform_version'],
+      lsb_codename: node['lsb'] && node['lsb']['codename'],
+      platform_family: node['platform_family']
+    )
   end
 end

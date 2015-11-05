@@ -9,6 +9,7 @@ require 'coveralls'
 require 'tmpdir'
 require 'fileutils'
 require_relative '../libraries/helpers'
+require_relative '../libraries/helpers_builder'
 
 RSpec.configure do |c|
   c.color = true

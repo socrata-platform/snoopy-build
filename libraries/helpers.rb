@@ -18,90 +18,36 @@
 # limitations under the License.
 #
 
-require 'json'
 require 'net/http'
+require 'json'
 
 module SnoopyBuildCookbook
-  # A set of helper methods for determining versions and build numbers.
+  # Helper methods that are shared, to be used in both the individual builder
+  # servers as well as the central instance coordinating them.
   #
   # @author Jonathan Hartman <jonathan.hartman@socrata.com>
-  module Helpers
+  class Helpers
     class << self
-      #
-      # Upload a completed package to PackageCloud.
-      #
-      def push_package!
-        client.put_package('snoopy', package)
-      end
+      attr_reader :user, :token, :repo
 
       #
-      # Return a package instance for the configured package and distro.
+      # Configure the class based on an input config hash.
       #
-      # @return [Packagecloud::Package] a package instance for upload
+      # @param config [Hash] a hash containing, at a minimum, :user, :token and
+      #                      :repo keys
       #
-      def package
-        Packagecloud::Package.new(open(package_file), distro_id)
-      end
-
-      #
-      # Build the path to the package file based on the configured platform
-      # information.
-      #
-      # @return [String] the package file's path
-      #
-      def package_file
-        File.join(File.expand_path('~/fpm-recipes/snoopy/pkg'),
-                  case platform_family
-                  when 'debian'
-                    "snoopy_#{version}-#{revision}_amd64.deb"
-                  when 'rhel'
-                    "snoopy-#{version}-#{revision}.x86_64.rpm"
-                  end)
-      end
-
-      #
-      # Use the saved platform information to build the appropriate distro ID.
-      #
-      # @return [Hash] a Packagecloud distro ID
-      #
-      def distro_id
-        distro = case platform_family
-                 when 'debian'
-                   "#{platform}/#{lsb_codename}"
-                 when 'rhel'
-                   "el/#{platform_version.to_i}"
-                 end
-        client.find_distribution_id(distro)
-      end
-
-      #
-      # Grab the text file with the latest released version of Snoopy.
-      #
-      # @return [String] the most recent version
-      #
-      def version
-        @version ||= begin
-          u = 'http://source.a2o.si/download/snoopy/snoopy-latest-version.txt'
-          Net::HTTP.get(URI(u)).strip
-        end
-      end
-
-      #
-      # Iterate over the packages released for this version and return what
-      # the next build number should be.
-      #
-      # @return [FixNum] the next build revision
-      #
-      def revision
-        @revision ||= begin
-          return 1 if token.nil? || packages.empty?
-          packages.sort_by { |p| p['release'] }.last['release'].to_i + 1
-        end
+      def configure!(config)
+        config ||= {}
+        @user = config.delete(:user) || fail(MissingConfig, :user)
+        @token = config.delete(:token) || fail(MissingConfig, :token)
+        @repo = config.delete(:repo) || fail(MissingConfig, :repo)
+        self
       end
 
       #
       # Iterate over the packages released for this repo and return the ones
-      # matching the desired version.
+      # matching the desired version. This requires enough configuration to
+      # satisfy the `client` method and a repo.
       #
       # @return [Array<Hash>] an array of released packages
       #
@@ -114,7 +60,8 @@ module SnoopyBuildCookbook
       end
 
       #
-      # Return the PackageCloud client instance for package queries.
+      # Return the PackageCloud client instance for package queries. This
+      # requires enough configuration to satisfy the `credentials` method.
       #
       # @return [Packagecloud::Client] the client
       #
@@ -127,6 +74,8 @@ module SnoopyBuildCookbook
 
       #
       # Return the PackageCloud credentials needed for client instantiation.
+      # This requires a configuration that includes a PackageCloud user and
+      # token.
       #
       # @return [Packagecloud::Credentials] the credentials
       #
@@ -138,29 +87,46 @@ module SnoopyBuildCookbook
       end
 
       #
-      # Provide a single method one can use to pass in and save the requisite
-      # PackageCloud and platform attributes.
+      # Grab the text file with the latest released version of Snoopy and
+      # return that version string.
       #
-      # @param node [Chef::Node] a Chef node object with the attributes we need
+      # @return [String] the most recent version
       #
-      def configure!(node)
-        @repo = node['snoopy_build']['package_cloud_repo']
-        @user = node['snoopy_build']['package_cloud_user']
-        @token = node['snoopy_build']['package_cloud_token']
-        @platform = node['platform']
-        @platform_version = node['platform_version']
-        @lsb_codename = node['lsb'] && node['lsb']['codename']
-        @platform_family = node['platform_family']
-        self
+      def version
+        @version ||= begin
+          u = 'http://source.a2o.si/download/snoopy/snoopy-latest-version.txt'
+          Net::HTTP.get(URI(u)).strip
+        end
       end
 
-      attr_reader :repo,
-                  :user,
-                  :token,
-                  :platform,
-                  :platform_version,
-                  :lsb_codename,
-                  :platform_family
+      #
+      # Iterate over the packages released for this version and return what
+      # the next build number should be. This requires enough config to
+      # satisfy the `packages` method. It will fallback to 1 if no token is
+      # configured.
+      #
+      # @return [FixNum] the next build revision
+      #
+      def revision
+        @revision ||= begin
+          return 1 if token.nil? || packages.empty?
+          packages.sort_by { |p| p['release'] }.last['release'].to_i + 1
+        end
+      end
+    end
+
+    # A custom exception class for missing configuration items.
+    #
+    # @author Jonathan Hartman <jonathan.hartman@socrata.com>
+    class MissingConfig < StandardError
+      #
+      # Just re-raise a StandardError exception with a custom message.
+      #
+      # (see StandardError#initialize)
+      #
+      def initialize(item)
+        super("Config item `#{item}` is required, but was not provided")
+      end
     end
   end
 end
