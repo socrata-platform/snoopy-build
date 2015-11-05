@@ -18,11 +18,12 @@
 # limitations under the License.
 #
 
+require 'net/http'
 require 'json'
 
 module SnoopyBuildCookbook
-  # Helper methods that are shared, to be used in both the coordinator and
-  # builder servers.
+  # Helper methods that are shared, to be used in both the individual builder
+  # servers as well as the central instance coordinating them.
   #
   # @author Jonathan Hartman <jonathan.hartman@socrata.com>
   class Helpers
@@ -82,6 +83,34 @@ module SnoopyBuildCookbook
         @credentials ||= begin
           require 'packagecloud'
           Packagecloud::Credentials.new(user, token)
+        end
+      end
+
+      #
+      # Grab the text file with the latest released version of Snoopy and
+      # return that version string.
+      #
+      # @return [String] the most recent version
+      #
+      def version
+        @version ||= begin
+          u = 'http://source.a2o.si/download/snoopy/snoopy-latest-version.txt'
+          Net::HTTP.get(URI(u)).strip
+        end
+      end
+
+      #
+      # Iterate over the packages released for this version and return what
+      # the next build number should be. This requires enough config to
+      # satisfy the `packages` method. It will fallback to 1 if no token is
+      # configured.
+      #
+      # @return [FixNum] the next build revision
+      #
+      def revision
+        @revision ||= begin
+          return 1 if token.nil? || packages.empty?
+          packages.sort_by { |p| p['release'] }.last['release'].to_i + 1
         end
       end
     end

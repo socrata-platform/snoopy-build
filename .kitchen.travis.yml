@@ -13,16 +13,16 @@ suites:
         package_cloud_repo: snoopy
         publish_artifacts: <%= ENV['TRAVIS_PULL_REQUEST'] == 'false' ? true : false %>
         build_version: <%=
-          require_relative 'libraries/helpers_coordinator'
-          SnoopyBuildCookbook::Helpers::Coordinator.version
+          require_relative 'libraries/helpers'
+          SnoopyBuildCookbook::Helpers.version
         %>
         build_revision: <%=
-          require_relative 'libraries/helpers_coordinator'
+          require_relative 'libraries/helpers'
           conf = {
             user: 'socrata-platform',
             token: ENV['PACKAGECLOUD_TOKEN'],
             repo: 'snoopy'
           }
-          SnoopyBuildCookbook::Helpers::Coordinator.configure!(conf)
-          SnoopyBuildCookbook::Helpers::Coordinator.revision
+          SnoopyBuildCookbook::Helpers.configure!(conf)
+          SnoopyBuildCookbook::Helpers.revision
         %>

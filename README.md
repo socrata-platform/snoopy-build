@@ -74,15 +74,10 @@ Libraries
 
 Helper methods for the individual instances doing the package builds.
 
-***helpers_coordinator***
-
-Helper methods for the one instance overseeing the ones doing the package
-builds.
-
 ***helpers***
 
-Helper methods that are common to both the builder and coordinator helper
-classes.
+Helper methods that are common to both the builders and the instance managing
+them with Test Kitchen.
 
 Attributes
 ==========
