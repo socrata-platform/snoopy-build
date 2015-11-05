@@ -9,9 +9,6 @@ describe 'snoopy-build::_verify' do
   let(:chef_run) { runner.converge(described_recipe) }
 
   before(:each) do
-    # The libraries have already been loaded; don't let ChefSpec reload them
-    # and clear out our stubs.
-    allow(Kernel).to receive(:load)
     allow(SnoopyBuildCookbook::Helpers::Builder).to receive(:package_file)
       .and_return(package_file)
   end

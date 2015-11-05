@@ -20,16 +20,14 @@
 
 gem_package 'serverspec'
 
-artifact_path = SnoopyBuildCookbook::Helpers::Builder.package_file
-
 case node['platform_family']
 when 'debian'
   dpkg_package 'snoopy' do
-    package_name artifact_path
+    package_name lazy { SnoopyBuildCookbook::Helpers::Builder.package_file }
   end
 when 'rhel'
   rpm_package 'snoopy' do
-    package_name artifact_path
+    package_name lazy { SnoopyBuildCookbook::Helpers::Builder.package_file }
   end
 end
 

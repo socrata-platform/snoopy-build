@@ -17,8 +17,6 @@ describe 'snoopy-build::_configure' do
   let(:chef_run) { runner.converge(described_recipe) }
 
   before(:each) do
-    # The libraries have already been loaded; don't let ChefSpec reload them
-    # and clear out our stubs.
     allow(Kernel).to receive(:load)
   end
 
@@ -26,6 +24,11 @@ describe 'snoopy-build::_configure' do
     it 'installs the packagecloud gem' do
       expect(chef_run).to install_chef_gem('packagecloud-ruby')
         .with(compile_time: false)
+    end
+
+    it 'executes the configuration ruby block' do
+      expected = 'Configure the package builder helpers'
+      expect(chef_run).to run_ruby_block(expected)
     end
   end
 
@@ -43,7 +46,8 @@ describe 'snoopy-build::_configure' do
               platform_version: '14.04',
               lsb_codename: 'trusty',
               platform_family: 'debian')
-      chef_run
+      chef_run.ruby_block('Configure the package builder helpers')
+        .old_run_action(:run)
     end
   end
 
@@ -61,7 +65,8 @@ describe 'snoopy-build::_configure' do
               platform_version: '12.04',
               lsb_codename: 'precise',
               platform_family: 'debian')
-      chef_run
+      chef_run.ruby_block('Configure the package builder helpers')
+        .old_run_action(:run)
     end
   end
 
@@ -79,7 +84,8 @@ describe 'snoopy-build::_configure' do
               platform_version: '7.0.1406',
               lsb_codename: nil,
               platform_family: 'rhel')
-      chef_run
+      chef_run.ruby_block('Configure the package builder helpers')
+        .old_run_action(:run)
     end
   end
 
@@ -97,7 +103,8 @@ describe 'snoopy-build::_configure' do
               platform_version: '6.6',
               lsb_codename: nil,
               platform_family: 'rhel')
-      chef_run
+      chef_run.ruby_block('Configure the package builder helpers')
+        .old_run_action(:run)
     end
   end
 end

@@ -18,18 +18,22 @@
 # limitations under the License.
 #
 
-SnoopyBuildCookbook::Helpers::Builder.configure!(
-  user: node['snoopy_build']['package_cloud_user'],
-  token: node['snoopy_build']['package_cloud_token'],
-  repo: node['snoopy_build']['package_cloud_repo'],
-  platform: node['platform'],
-  platform_version: node['platform_version'],
-  lsb_codename: node['lsb'] && node['lsb']['codename'],
-  platform_family: node['platform_family']
-)
-
 chef_gem 'packagecloud-ruby' do
   if Chef::Resource::ChefGem.instance_methods(false).include?(:compile_time)
     compile_time false
+  end
+end
+
+ruby_block 'Configure the package builder helpers' do
+  block do
+    SnoopyBuildCookbook::Helpers::Builder.configure!(
+      user: node['snoopy_build']['package_cloud_user'],
+      token: node['snoopy_build']['package_cloud_token'],
+      repo: node['snoopy_build']['package_cloud_repo'],
+      platform: node['platform'],
+      platform_version: node['platform_version'],
+      lsb_codename: node['lsb'] && node['lsb']['codename'],
+      platform_family: node['platform_family']
+    )
   end
 end
