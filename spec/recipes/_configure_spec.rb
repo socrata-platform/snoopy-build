@@ -83,8 +83,8 @@ describe 'snoopy-build::_configure' do
     end
   end
 
-  context 'CentOS 6.7' do
-    let(:platform) { { platform: 'centos', version: '6.7' } }
+  context 'CentOS 6.6' do
+    let(:platform) { { platform: 'centos', version: '6.6' } }
 
     it_behaves_like 'any platform'
 
@@ -94,7 +94,7 @@ describe 'snoopy-build::_configure' do
               token: token,
               repo: repo,
               platform: 'centos',
-              platform_version: '6.7',
+              platform_version: '6.6',
               lsb_codename: nil,
               platform_family: 'rhel')
       chef_run

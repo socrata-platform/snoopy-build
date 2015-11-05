@@ -67,6 +67,23 @@ tests against it with ServerSpec.
 If configured to publish artifacts, uploads the result of the `_build` recipe
 to PackageCloud.
 
+Libraries
+=========
+
+***helpers_builder***
+
+Helper methods for the individual instances doing the package builds.
+
+***helpers_coordinator***
+
+Helper methods for the one instance overseeing the ones doing the package
+builds.
+
+***helpers***
+
+Helper methods that are common to both the builder and coordinator helper
+classes.
+
 Attributes
 ==========
 The included attributes file defines attributes for PackageCloud access, the
