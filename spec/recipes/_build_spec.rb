@@ -29,10 +29,6 @@ describe 'snoopy-build::_build' do
       expect(chef_run).to include_recipe('build-essential')
     end
 
-    it 'includes ruby' do
-      expect(chef_run).to include_recipe('ruby')
-    end
-
     it 'installs fpm-cookery' do
       expect(chef_run).to install_chef_gem('fpm-cookery')
         .with(compile_time: false)

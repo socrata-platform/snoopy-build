@@ -11,7 +11,6 @@ version          '0.0.1'
 
 depends          'apt'
 depends          'build-essential'
-depends          'ruby'
 depends          'yum-epel'
 
 supports         'ubuntu'
