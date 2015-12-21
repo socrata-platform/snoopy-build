@@ -15,7 +15,8 @@ describe 'snoopy-build::_verify' do
 
   shared_examples_for 'any platform' do
     it 'installs the serverspec gem' do
-      expect(chef_run).to install_gem_package('serverspec')
+      expect(chef_run).to install_chef_gem('serverspec')
+        .with(compile_time: false)
     end
 
     it 'copies over the spec directory' do
@@ -23,8 +24,9 @@ describe 'snoopy-build::_verify' do
     end
 
     it 'runs the ServerSpec tests' do
-      expect(chef_run).to run_execute('rspec */*_spec.rb -f d')
-        .with(cwd: File.expand_path('~/spec'))
+      expect(chef_run).to run_execute(
+        '/opt/chef/embedded/bin/rspec */*_spec.rb -f d'
+      ).with(cwd: File.expand_path('~/spec'))
     end
   end
 
