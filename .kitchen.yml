@@ -6,6 +6,9 @@ provisioner:
   require_chef_omnibus: true
 
 platforms:
+  - name: ubuntu-15.10
+    driver:
+      box: boxcutter/ubuntu1510
   - name: ubuntu-14.04
   - name: ubuntu-12.04
   - name: centos-7.1

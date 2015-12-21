@@ -18,7 +18,7 @@ describe 'snoopy-build::_configure' do
       node.set['snoopy_build']['build_revision'] = revision
     end
   end
-  let(:chef_run) { runner.converge(described_recipe) }
+  let(:converge) { runner.converge(described_recipe) }
 
   before(:each) do
     allow(Kernel).to receive(:load)
@@ -36,8 +36,31 @@ describe 'snoopy-build::_configure' do
     end
   end
 
+  context 'Ubuntu 15.10' do
+    let(:platform) { { platform: 'ubuntu', version: '15.10' } }
+    cached(:chef_run) { converge }
+
+    it_behaves_like 'any platform'
+
+    it 'correctly configures the builder' do
+      expect(SnoopyBuildCookbook::Helpers::Builder).to receive(:configure!)
+        .with(user: user,
+              token: token,
+              repo: repo,
+              platform: 'ubuntu',
+              platform_version: '15.10',
+              lsb_codename: 'wily',
+              platform_family: 'debian',
+              version: '1.2.3',
+              revision: 4)
+      chef_run.ruby_block('Configure the package builder helpers')
+        .old_run_action(:run)
+    end
+  end
+
   context 'Ubuntu 14.04' do
     let(:platform) { { platform: 'ubuntu', version: '14.04' } }
+    cached(:chef_run) { converge }
 
     it_behaves_like 'any platform'
 
@@ -59,6 +82,7 @@ describe 'snoopy-build::_configure' do
 
   context 'Ubuntu 12.04' do
     let(:platform) { { platform: 'ubuntu', version: '12.04' } }
+    cached(:chef_run) { converge }
 
     it_behaves_like 'any platform'
 
@@ -78,8 +102,31 @@ describe 'snoopy-build::_configure' do
     end
   end
 
+  context 'Ubuntu 10.04' do
+    let(:platform) { { platform: 'ubuntu', version: '10.04' } }
+    cached(:chef_run) { converge }
+
+    it_behaves_like 'any platform'
+
+    it 'correctly configures the builder' do
+      expect(SnoopyBuildCookbook::Helpers::Builder).to receive(:configure!)
+        .with(user: user,
+              token: token,
+              repo: repo,
+              platform: 'ubuntu',
+              platform_version: '10.04',
+              lsb_codename: 'lucid',
+              platform_family: 'debian',
+              version: '1.2.3',
+              revision: 4)
+      chef_run.ruby_block('Configure the package builder helpers')
+        .old_run_action(:run)
+    end
+  end
+
   context 'CentOS 7.0' do
     let(:platform) { { platform: 'centos', version: '7.0' } }
+    cached(:chef_run) { converge }
 
     it_behaves_like 'any platform'
 
@@ -101,6 +148,7 @@ describe 'snoopy-build::_configure' do
 
   context 'CentOS 6.6' do
     let(:platform) { { platform: 'centos', version: '6.6' } }
+    cached(:chef_run) { converge }
 
     it_behaves_like 'any platform'
 

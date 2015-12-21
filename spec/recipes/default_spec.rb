@@ -3,8 +3,9 @@
 require_relative '../spec_helper'
 
 describe 'snoopy-build::default' do
-  let(:runner) { ChefSpec::SoloRunner.new }
-  let(:chef_run) { runner.converge(described_recipe) }
+  let(:platform) { { platform: 'ubuntu', version: '14.04' } }
+  let(:runner) { ChefSpec::SoloRunner.new(platform) }
+  cached(:chef_run) { runner.converge(described_recipe) }
 
   %w(_configure _build _verify _deploy).each do |r|
     it "runs the '#{r}' recipe" do

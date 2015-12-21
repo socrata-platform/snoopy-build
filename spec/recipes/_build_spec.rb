@@ -7,7 +7,7 @@ describe 'snoopy-build::_build' do
   let(:version) { '2.4.4' }
   let(:revision) { 1 }
   let(:runner) { ChefSpec::SoloRunner.new(platform) }
-  let(:chef_run) { runner.converge(described_recipe) }
+  let(:converge) { runner.converge(described_recipe) }
 
   before(:each) do
     %i(version revision).each do |m|
@@ -49,11 +49,7 @@ describe 'snoopy-build::_build' do
     end
   end
 
-  context 'Ubuntu 14.04' do
-    let(:platform) { { platform: 'ubuntu', version: '14.04' } }
-
-    it_behaves_like 'any platform'
-
+  shared_examples_for 'a Ubuntu platform' do
     it 'ensures the APT cache is refreshed' do
       expect(chef_run).to include_recipe('apt')
     end
@@ -63,28 +59,54 @@ describe 'snoopy-build::_build' do
     end
   end
 
-  context 'Ubuntu 12.04' do
-    let(:platform) { { platform: 'ubuntu', version: '12.04' } }
-
-    it_behaves_like 'any platform'
-
-    it 'ensures the APT cache is refreshed' do
-      expect(chef_run).to include_recipe('apt')
+  shared_examples_for 'a CentOS platform' do
+    it 'does not run the APT recipe' do
+      expect(chef_run).to_not include_recipe('apt')
     end
 
-    it 'does not configure EPEL' do
-      expect(chef_run).to_not include_recipe('yum-epel')
+    it 'does not configure the neurodebian APT repo' do
+      expect(chef_run).to_not add_apt_repository('neurodebian')
+    end
+  end
+
+  %w(15.10 14.04 12.04).each do |v|
+    context "Ubuntu #{v}" do
+      let(:platform) { { platform: 'ubuntu', version: v } }
+      cached(:chef_run) { converge }
+
+      it_behaves_like 'any platform'
+      it_behaves_like 'a Ubuntu platform'
+
+      it 'does not configure the neurodebian APT repo' do
+        expect(chef_run).to_not add_apt_repository('neurodebian')
+      end
+    end
+  end
+
+  context 'Ubuntu 10.04' do
+    let(:platform) { { platform: 'ubuntu', version: '10.04' } }
+    cached(:chef_run) { converge }
+
+    it_behaves_like 'any platform'
+    it_behaves_like 'a Ubuntu platform'
+
+    it 'configures the neurodebian APT repo' do
+      expect(chef_run).to add_apt_repository('neurodebian').with(
+        uri: 'http://masi.vuse.vanderbilt.edu/neurodebian',
+        distribution: 'lucid',
+        components: %w(main),
+        keyserver: 'pgp.mit.edu',
+        key: '0xA5D32F012649A5A9'
+      )
     end
   end
 
   context 'CentOS 7.0' do
     let(:platform) { { platform: 'centos', version: '7.0' } }
+    cached(:chef_run) { converge }
 
     it_behaves_like 'any platform'
-
-    it 'does not run the APT recipe' do
-      expect(chef_run).to_not include_recipe('apt')
-    end
+    it_behaves_like 'a CentOS platform'
 
     it 'does not configure EPEL' do
       expect(chef_run).to_not include_recipe('yum-epel')
@@ -93,12 +115,10 @@ describe 'snoopy-build::_build' do
 
   context 'CentOS 6.6' do
     let(:platform) { { platform: 'centos', version: '6.6' } }
+    cached(:chef_run) { converge }
 
     it_behaves_like 'any platform'
-
-    it 'does not run the APT recipe' do
-      expect(chef_run).to_not include_recipe('apt')
-    end
+    it_behaves_like 'a CentOS platform'
 
     it 'configures EPEL' do
       expect(chef_run).to include_recipe('yum-epel')
