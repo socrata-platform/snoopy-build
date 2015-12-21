@@ -16,6 +16,10 @@ suites:
     run_list: snoopy-build::default
     attributes:
       snoopy_build:
+        package_cloud_user: test
+        package_cloud_token: test
+        package_cloud_repo: test
+        publish_artifacts: false
         build_version: <%=
           require_relative 'libraries/helpers'
           SnoopyBuildCookbook::Helpers.version

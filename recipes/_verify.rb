@@ -18,7 +18,9 @@
 # limitations under the License.
 #
 
-gem_package 'serverspec'
+chef_gem 'serverspec' do
+  compile_time false
+end
 
 case node['platform_family']
 when 'debian'
@@ -33,6 +35,6 @@ end
 
 remote_directory File.expand_path('~/spec')
 
-execute 'rspec */*_spec.rb -f d' do
+execute '/opt/chef/embedded/bin/rspec */*_spec.rb -f d' do
   cwd File.expand_path('~/spec')
 end

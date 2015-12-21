@@ -34,11 +34,13 @@ if node['platform_family'] == 'rhel' && node['platform_version'].to_i < 7
   include_recipe 'yum-epel'
 end
 
-gem_package 'fpm-cookery'
+chef_gem 'fpm-cookery' do
+  compile_time false
+end
 
 remote_directory File.expand_path('~/fpm-recipes')
 
-execute 'fpm-cook' do
+execute '/opt/chef/embedded/bin/fpm-cook' do
   cwd File.expand_path('~/fpm-recipes/snoopy')
   environment lazy {
     {
