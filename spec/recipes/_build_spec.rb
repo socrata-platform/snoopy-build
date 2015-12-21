@@ -34,7 +34,8 @@ describe 'snoopy-build::_build' do
     end
 
     it 'installs fpm-cookery' do
-      expect(chef_run).to install_gem_package('fpm-cookery')
+      expect(chef_run).to install_chef_gem('fpm-cookery')
+        .with(compile_time: false)
     end
 
     it 'syncs the fpm-recipes directory' do
@@ -43,7 +44,7 @@ describe 'snoopy-build::_build' do
     end
 
     it 'runs fpm-cook' do
-      expect(chef_run).to run_execute('fpm-cook')
+      expect(chef_run).to run_execute('/opt/chef/embedded/bin/fpm-cook')
         .with(cwd: File.expand_path('~/fpm-recipes/snoopy'))
     end
   end
