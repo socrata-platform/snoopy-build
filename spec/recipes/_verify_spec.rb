@@ -6,7 +6,7 @@ describe 'snoopy-build::_verify' do
   let(:platform) { nil }
   let(:package_file) { '/tmp/package.pkg' }
   let(:runner) { ChefSpec::SoloRunner.new(platform) }
-  let(:chef_run) { runner.converge(described_recipe) }
+  let(:converge) { runner.converge(described_recipe) }
 
   before(:each) do
     allow(SnoopyBuildCookbook::Helpers::Builder).to receive(:package_file)
@@ -32,6 +32,7 @@ describe 'snoopy-build::_verify' do
 
   context 'Ubuntu' do
     let(:platform) { { platform: 'ubuntu', version: '14.04' } }
+    cached(:chef_run) { converge }
 
     it_behaves_like 'any platform'
 
@@ -42,6 +43,7 @@ describe 'snoopy-build::_verify' do
 
   context 'CentOS' do
     let(:platform) { { platform: 'centos', version: '7.0' } }
+    cached(:chef_run) { converge }
 
     it_behaves_like 'any platform'
 

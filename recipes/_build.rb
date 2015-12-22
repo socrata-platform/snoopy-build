@@ -29,9 +29,18 @@ end
 
 include_recipe 'apt' if node['platform_family'] == 'debian'
 include_recipe 'build-essential'
-include_recipe 'ruby'
 if node['platform_family'] == 'rhel' && node['platform_version'].to_i < 7
   include_recipe 'yum-epel'
+end
+apt_repository 'neurodebian' do
+  uri 'http://masi.vuse.vanderbilt.edu/neurodebian'
+  distribution node['lsb']['codename']
+  components %w(main)
+  keyserver 'pgp.mit.edu'
+  key '0xA5D32F012649A5A9'
+  only_if do
+    node['platform'] == 'ubuntu' && node['platform_version'].to_i < 12
+  end
 end
 
 chef_gem 'fpm-cookery' do
