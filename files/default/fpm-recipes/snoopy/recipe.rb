@@ -60,7 +60,7 @@ class Snoopy < FPM::Cookery::Recipe
       s.gsub!(/m4_esyscmd_s.*/, "[#{version}],")
     end
     safesystem './bootstrap.sh'
-    configure prefix: '/'
+    configure prefix: '/', 'enable-thread-safety' => true
     make
   end
 
