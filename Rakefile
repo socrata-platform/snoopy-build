@@ -1,7 +1,6 @@
 # Encoding: UTF-8
 
 require 'rubygems'
-require 'English'
 require 'bundler/setup'
 require 'rubocop/rake_task'
 require 'rspec/core/rake_task'

@@ -1,6 +1,5 @@
 # Encoding: UTF-8
-#
-# rubocop:disable SingleSpaceBeforeFirstArg
+
 name             'snoopy-build'
 maintainer       'Jonathan Hartman'
 maintainer_email 'jonathan.hartman@socrata.com'
@@ -14,4 +13,3 @@ depends          'build-essential'
 depends          'yum-epel'
 
 supports         'ubuntu'
-# rubocop:enable SingleSpaceBeforeFirstArg

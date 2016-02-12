@@ -48,7 +48,7 @@ module SnoopyBuildCookbook
             platform platform_version platform_family version revision
           ).each do |c|
             instance_variable_set(:"@#{c}", config.delete(c)) || \
-              fail(MissingConfig, c)
+              raise(MissingConfig, c)
           end
           @lsb_codename = config.delete(:lsb_codename)
           self

@@ -38,9 +38,9 @@ module SnoopyBuildCookbook
       #
       def configure!(config)
         config ||= {}
-        @user = config.delete(:user) || fail(MissingConfig, :user)
-        @token = config.delete(:token) || fail(MissingConfig, :token)
-        @repo = config.delete(:repo) || fail(MissingConfig, :repo)
+        @user = config.delete(:user) || raise(MissingConfig, :user)
+        @token = config.delete(:token) || raise(MissingConfig, :token)
+        @repo = config.delete(:repo) || raise(MissingConfig, :repo)
         self
       end
 
