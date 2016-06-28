@@ -24,7 +24,7 @@ require 'fpm/cookery/recipe'
 #
 # @author Jonathan Hartman <jonathan.hartman@socrata.com>
 class Snoopy < FPM::Cookery::Recipe
-  DOWNLOAD_ROOT = 'http://source.a2o.si/download/snoopy'
+  DOWNLOAD_ROOT = 'http://source.a2o.si/download/snoopy'.freeze
 
   name 'snoopy'
 

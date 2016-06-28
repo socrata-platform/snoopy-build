@@ -54,7 +54,7 @@ describe 'snoopy-build::_configure' do
               version: '1.2.3',
               revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
-        .old_run_action(:run)
+              .old_run_action(:run)
     end
   end
 
@@ -76,7 +76,7 @@ describe 'snoopy-build::_configure' do
               version: '1.2.3',
               revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
-        .old_run_action(:run)
+              .old_run_action(:run)
     end
   end
 
@@ -98,7 +98,7 @@ describe 'snoopy-build::_configure' do
               version: '1.2.3',
               revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
-        .old_run_action(:run)
+              .old_run_action(:run)
     end
   end
 
@@ -120,7 +120,7 @@ describe 'snoopy-build::_configure' do
               version: '1.2.3',
               revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
-        .old_run_action(:run)
+              .old_run_action(:run)
     end
   end
 
@@ -142,7 +142,7 @@ describe 'snoopy-build::_configure' do
               version: '1.2.3',
               revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
-        .old_run_action(:run)
+              .old_run_action(:run)
     end
   end
 
@@ -164,7 +164,7 @@ describe 'snoopy-build::_configure' do
               version: '1.2.3',
               revision: 4)
       chef_run.ruby_block('Configure the package builder helpers')
-        .old_run_action(:run)
+              .old_run_action(:run)
     end
   end
 end
