@@ -59,7 +59,7 @@ class Snoopy < FPM::Cookery::Recipe
       # already know the version at this point anyway.
       s.gsub!(/m4_esyscmd_s.*/, "[#{version}],")
     end
-    safesystem './bootstrap.sh'
+
     configure prefix: '/'
     make
   end
