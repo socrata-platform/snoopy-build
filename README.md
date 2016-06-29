@@ -8,7 +8,16 @@ Snoopy Build Project
 
 A project for building Snoopy Logger packages using FPM-Cookery.
 
-This project currently builds for Ubuntu 14.04 only.
+This project currently builds packages for:
+
+| Platform | Version |
+|----------|---------|
+| Ubuntu   | 16.04   |
+| Ubuntu   | 14.04   |
+| Ubuntu   | 12.04   |
+| Ubuntu   | 10.04   |
+| RHEL     | 7       |
+| RHEL     | 6       |
 
 ***Why not use Omnibus?***
 
