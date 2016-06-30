@@ -27,7 +27,7 @@ directory File.expand_path('~/fpm-recipes/snoopy/pkg') do
   recursive true
 end
 
-include_recipe 'apt' if node['platform_family'] == 'debian'
+apt_update 'periodic' if node['platform_family'] == 'debian'
 include_recipe 'build-essential'
 if node['platform_family'] == 'rhel' && node['platform_version'].to_i < 7
   include_recipe 'yum-epel'

@@ -11,7 +11,6 @@ version '0.0.1'
 source_url 'https://github.com/socrata-platform/snoopy-build'
 issues_url 'https://github.com/socrata-platform/snoopy-build/issues'
 
-depends 'apt'
 depends 'build-essential'
 depends 'yum-epel'
 

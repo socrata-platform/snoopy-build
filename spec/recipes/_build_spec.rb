@@ -47,7 +47,7 @@ describe 'snoopy-build::_build' do
 
   shared_examples_for 'a Ubuntu platform' do
     it 'ensures the APT cache is refreshed' do
-      expect(chef_run).to include_recipe('apt')
+      expect(chef_run).to periodic_apt_update('periodic')
     end
 
     it 'does not configure EPEL' do
@@ -56,8 +56,8 @@ describe 'snoopy-build::_build' do
   end
 
   shared_examples_for 'a CentOS platform' do
-    it 'does not run the APT recipe' do
-      expect(chef_run).to_not include_recipe('apt')
+    it 'does not do anything with APT' do
+      expect(chef_run).to_not periodic_apt_update('periodic')
     end
 
     it 'does not configure the neurodebian APT repo' do

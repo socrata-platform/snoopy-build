@@ -6,6 +6,7 @@ require 'chefspec/berkshelf'
 require 'simplecov'
 require 'simplecov-console'
 require 'coveralls'
+require_relative 'support/libraries/matchers'
 require_relative '../libraries/helpers'
 require_relative '../libraries/helpers_builder'
 
