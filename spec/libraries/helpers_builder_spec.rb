@@ -77,36 +77,34 @@ describe SnoopyBuildCookbook::Helpers::Builder do
   describe '.push_package!' do
     let(:client) { double }
     let(:package) { 'dummy package' }
+    let(:distro_id) { 'dummy distro id' }
 
     before(:each) do
       allow(described_class).to receive(:client).and_return(client)
       allow(client).to receive(:put_package)
       allow(described_class).to receive(:package).and_return(package)
+      allow(described_class).to receive(:distro_id).and_return(distro_id)
     end
 
     it 'uploads the package to PackageCloud' do
-      expect(client).to receive(:put_package).with('a_repo', package)
+      expect(client).to receive(:put_package).with('a_repo', package, distro_id)
       described_class.push_package!
     end
   end
 
   describe '.package' do
-    let(:package_file) { 'dummy package _file' }
-    let(:distro_id) { 'dummy distro id' }
+    let(:package_file) { 'dummy package_file' }
+    let(:package) { 'a dummy package' }
 
     before(:each) do
-      %i(package_file distro_id).each do |a|
-        allow(described_class).to receive(a).and_return(send(a))
-      end
-      allow(described_class).to receive(:open).with(package_file)
-        .and_return(package_file)
+      require 'packagecloud'
+      allow(described_class).to receive(:package_file).and_return(package_file)
+      allow(Packagecloud::Package).to receive(:new).with(file: package_file)
+        .and_return(package)
     end
 
     it 'returns a Packagecloud::Package object' do
-      require 'packagecloud'
-      expect(Packagecloud::Package).to receive(:new).with(package_file,
-                                                          distro_id)
-      described_class.package
+      expect(described_class.package).to eq(package)
     end
   end
 
