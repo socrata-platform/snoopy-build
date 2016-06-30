@@ -59,6 +59,11 @@ class Snoopy < FPM::Cookery::Recipe
       # already know the version at this point anyway.
       s.gsub!(/m4_esyscmd_s.*/, "[#{version}],")
     end
+    safesystem 'rm -rf autom4te.cache'
+    safesystem 'mkdir -p build/m4'
+    safesystem 'mkdir -p lib/iniparser/build/m4'
+    safesystem 'autoreconf -i -v'
+    safesystem 'rm -f config.h.in~'
 
     configure prefix: '/'
     make

@@ -27,20 +27,28 @@ directory File.expand_path('~/fpm-recipes/snoopy/pkg') do
   recursive true
 end
 
-include_recipe 'apt' if node['platform_family'] == 'debian'
+if node['platform'] == 'ubuntu' && node['platform_version'].to_i < 12
+  file '/etc/apt/sources.list' do
+    content lazy {
+      File.read('/etc/apt/sources.list')
+          .gsub('archive.ubuntu.com', 'old-releases.ubuntu.com')
+          .gsub('security.ubuntu.com', 'old-releases.ubuntu.com')
+    }
+  end
+
+  apt_repository 'neurodebian' do
+    uri 'http://masi.vuse.vanderbilt.edu/neurodebian'
+    distribution node['lsb']['codename']
+    components %w(main)
+    keyserver 'pgp.mit.edu'
+    key '0xA5D32F012649A5A9'
+  end
+end
+
+apt_update 'periodic' if node['platform_family'] == 'debian'
 include_recipe 'build-essential'
 if node['platform_family'] == 'rhel' && node['platform_version'].to_i < 7
   include_recipe 'yum-epel'
-end
-apt_repository 'neurodebian' do
-  uri 'http://masi.vuse.vanderbilt.edu/neurodebian'
-  distribution node['lsb']['codename']
-  components %w(main)
-  keyserver 'pgp.mit.edu'
-  key '0xA5D32F012649A5A9'
-  only_if do
-    node['platform'] == 'ubuntu' && node['platform_version'].to_i < 12
-  end
 end
 
 chef_gem 'fpm-cookery' do

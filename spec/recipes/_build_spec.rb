@@ -47,7 +47,7 @@ describe 'snoopy-build::_build' do
 
   shared_examples_for 'a Ubuntu platform' do
     it 'ensures the APT cache is refreshed' do
-      expect(chef_run).to include_recipe('apt')
+      expect(chef_run).to periodic_apt_update('periodic')
     end
 
     it 'does not configure EPEL' do
@@ -56,8 +56,8 @@ describe 'snoopy-build::_build' do
   end
 
   shared_examples_for 'a CentOS platform' do
-    it 'does not run the APT recipe' do
-      expect(chef_run).to_not include_recipe('apt')
+    it 'does not do anything with APT' do
+      expect(chef_run).to_not periodic_apt_update('periodic')
     end
 
     it 'does not configure the neurodebian APT repo' do
@@ -73,6 +73,10 @@ describe 'snoopy-build::_build' do
       it_behaves_like 'any platform'
       it_behaves_like 'a Ubuntu platform'
 
+      it 'does not modify the default APT sources' do
+        expect(chef_run).to_not create_file('/etc/apt/sources.list')
+      end
+
       it 'does not configure the neurodebian APT repo' do
         expect(chef_run).to_not add_apt_repository('neurodebian')
       end
@@ -81,10 +85,35 @@ describe 'snoopy-build::_build' do
 
   context 'Ubuntu 10.04' do
     let(:platform) { { platform: 'ubuntu', version: '10.04' } }
+    let(:sources_list) do
+      <<-EOH.gsub(/^ +/, '').strip
+        # Here are some repos
+        http://archive.ubuntu.com/things
+        http://security.ubuntu.com/otherthings
+        http://security.ubuntu.com/morethings
+      EOH
+    end
     cached(:chef_run) { converge }
+
+    before(:each) do
+      allow(File).to receive(:read).and_call_original
+      allow(File).to receive(:read).with('/etc/apt/sources.list')
+        .and_return(sources_list)
+    end
 
     it_behaves_like 'any platform'
     it_behaves_like 'a Ubuntu platform'
+
+    it 'patches the default APT sources' do
+      expected = <<-EOH.gsub(/^ +/, '').strip
+        # Here are some repos
+        http://old-releases.ubuntu.com/things
+        http://old-releases.ubuntu.com/otherthings
+        http://old-releases.ubuntu.com/morethings
+      EOH
+      expect(chef_run).to create_file('/etc/apt/sources.list')
+        .with(content: expected)
+    end
 
     it 'configures the neurodebian APT repo' do
       expect(chef_run).to add_apt_repository('neurodebian').with(

@@ -10,8 +10,8 @@ group :test do
   gem 'rake'
   gem 'rubocop'
   gem 'foodcritic'
-  gem 'rspec', '>= 3'
-  gem 'chefspec', '>= 4'
+  gem 'rspec'
+  gem 'chefspec'
   gem 'simplecov'
   gem 'simplecov-console'
   gem 'coveralls'
@@ -19,15 +19,14 @@ group :test do
 end
 
 group :integration do
-  gem 'serverspec', '>= 2'
-  gem 'cucumber'
+  gem 'serverspec'
 end
 
 group :build do
   gem 'fpm-cookery'
   gem 'packagecloud-ruby'
-  gem 'chef', '>= 12'
-  gem 'berkshelf', '>= 4'
+  gem 'chef', '>= 12.9'
+  gem 'berkshelf'
   gem 'test-kitchen'
   gem 'kitchen-vagrant'
   gem 'kitchen-docker'
