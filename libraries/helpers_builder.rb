@@ -59,7 +59,7 @@ module SnoopyBuildCookbook
         # config to satisfy the `package` method.
         #
         def push_package!
-          client.put_package(repo, package)
+          client.put_package(repo, package, distro_id)
         end
 
         #
@@ -70,7 +70,7 @@ module SnoopyBuildCookbook
         # @return [Packagecloud::Package] a package instance for upload
         #
         def package
-          Packagecloud::Package.new(open(package_file), distro_id)
+          Packagecloud::Package.new(file: package_file)
         end
 
         #
