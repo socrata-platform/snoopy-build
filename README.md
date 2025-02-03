@@ -21,7 +21,6 @@ This project currently builds packages for:
 
 ***Why not use Omnibus?***
 
-Up until
 Omnibus pipeline is pretty heavyweight, especially
 for a simple application with no dependencies. A build can be completed much
 faster by bypassing Omnibus', e.g., installing RBEnv and compiling a fresh
