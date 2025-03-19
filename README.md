@@ -21,9 +21,7 @@ This project currently builds packages for:
 
 ***Why not use Omnibus?***
 
-Up until
-[recently](https://github.com/RoboticCheese/snoopy-omnibus/tree/43bd4428438c2d6171baecc1037fdb22eca2e38e),
-this project did. But an Omnibus pipeline is pretty heavyweight, especially
+Omnibus pipeline is pretty heavyweight, especially
 for a simple application with no dependencies. A build can be completed much
 faster by bypassing Omnibus', e.g., installing RBEnv and compiling a fresh
 Ruby.
